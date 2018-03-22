@@ -1,7 +1,7 @@
 #' extract texts and meta data from Kikuzo HTML files
 #'
 #' This extract headings, body texts and meta data (date, byline, length,
-#' secotion, edntion) from items in HTML files downloaded from the Kikuzo database.
+#' secotion, edntion) from HTML files downloaded from the Kikuzo database.
 #' @param path either path to a HTML file or a directory that containe HTML files
 #' @param paragraph_separator a character to sperarate paragrahphs in body texts.
 #' @import stringi XML
