@@ -1,22 +1,19 @@
-require(stringi)
-require(XML)
-
-#' extract texts and meta data from Nexis HTML files
+#' extract texts and meta data from Kikuzo HTML files
 #'
 #' This extract headings, body texts and meta data (date, byline, length,
-#' secotion, edntion) from items in HTML files downloaded by the scraper.
+#' secotion, edntion) from items in HTML files downloaded from the Kikuzo database.
 #' @param path either path to a HTML file or a directory that containe HTML files
 #' @param paragraph_separator a character to sperarate paragrahphs in body texts.
 #' @import stringi XML
 #' @export
 #' @examples
 #' \dontrun{
-#' one <- import_kinuzo('tests/html/kikuzo_1985-01-01_001.html')
-#' two <- import_kinuzo('tests/html/kikuzo_1985-01-01_002.html')
-#' all <- import_kinuzo('tests/html')
+#' one <- import_kikuzo('tests/html/kikuzo_1985-01-01_001.html')
+#' two <- import_kikuzo('tests/html/kikuzo_1985-01-01_002.html')
+#' all <- import_kikuzo('tests/html')
 #' }
 #'
-import_kinuzo <- function(path, paragraph_separator = '|'){
+import_kikuzo <- function(path, paragraph_separator = '|'){
 
     if (dir.exists(path)) {
         dir <- path
