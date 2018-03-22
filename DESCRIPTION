@@ -1,0 +1,21 @@
+Package: newspapers
+Type: Package
+Title: Import HTML files from newspaper databases
+Version: 0.1.0
+Author: Kohei Watanabe
+Maintainer: Kohei Watanabe <watanabe.kohei@gmail.com>
+Description: Import HTML files from newspaper databases
+License: What license is it under?
+Encoding: UTF-8
+LazyData: true
+Import:
+    stringi,
+    XML
+Depends:
+    R (>= 3.2.2),
+    methods,
+    urltools,
+    XML,
+    stringi
+Collate: 
+    'kikuzou.R'
