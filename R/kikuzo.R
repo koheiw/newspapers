@@ -1,4 +1,4 @@
-#' extract texts and meta data from Kikuzo HTML files
+#' Extract texts and meta data from Kikuzo HTML files
 #'
 #' This extract headings, body texts and meta data (date, byline, length,
 #' secotion, edntion) from HTML files downloaded from the Kikuzo database.
@@ -8,9 +8,9 @@
 #' @export
 #' @examples
 #' \dontrun{
-#' one <- import_kikuzo('tests/html/kikuzo_1985-01-01_001.html')
-#' two <- import_kikuzo('tests/html/kikuzo_1985-01-01_002.html')
-#' all <- import_kikuzo('tests/html')
+#' one <- import_kikuzo('testthat/data/kikuzo_1985-01-01_001.html')
+#' two <- import_kikuzo('testthat/data/kikuzo_1985-01-01_002.html')
+#' all <- import_kikuzo('testthat/data/html')
 #' }
 #'
 import_kikuzo <- function(path, paragraph_separator = '|'){
@@ -49,7 +49,8 @@ import_html <- function(file, paragraph_separator){
     #Load as DOM object
     dom <- htmlParse(html, encoding = "UTF-8")
     data <- data.frame()
-    for (node in getNodeSet(dom, '//body/table/tbody/tr')) {
+    for (node in getNodeSet(dom, '//table[@class="topic-detail"]')) {
+        node <- xmlParent(node)
         if (length(getNodeSet(node, './/div[@class="detail001"]'))) {
             data <- rbind(data, extract_attrs(node, paragraph_separator))
         }
@@ -74,7 +75,7 @@ extract_attrs <- function(node, paragraph_separator) {
     #attrs$body <- clean_text(xmlValue(getNodeSet(node, './/div[@class="detail001"]')[[1]]))
     attrs$head <- clean_text(xmlValue(getNodeSet(node, './/span[@class="font002"]')[[1]]))
 
-    tds <- getNodeSet(node, './/table[@class="topic-list"]/tbody/tr/td')
+    tds <- getNodeSet(node, './/table[@class="topic-list"]//td')
     attrs$date <- clean_text(xmlValue(tds[[2]]))
     attrs$edition <- clean_text(xmlValue(tds[[3]]))
     attrs$section <- clean_text(xmlValue(tds[[4]]))
