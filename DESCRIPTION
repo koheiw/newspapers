@@ -17,6 +17,8 @@ Depends:
     urltools,
     XML,
     stringi
-Collate: 
+Collate:
+    'utils.R'
     'kikuzo.R'
+    'factiva.R'
 RoxygenNote: 6.0.1

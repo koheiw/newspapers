@@ -8,37 +8,18 @@
 #' @export
 #' @examples
 #' \dontrun{
-#' one <- import_kikuzo('testthat/data/kikuzo_1985-01-01_001.html')
-#' two <- import_kikuzo('testthat/data/kikuzo_1985-01-01_002.html')
-#' all <- import_kikuzo('testthat/data/html')
+#' one <- import_kikuzo('testthat/data/kikuzo/asahi_1985-01-01_001.html')
+#' two <- import_kikuzo('testthat/data/kikuzo/asahi_1985-01-01_002.html')
+#' all <- import_kikuzo('testthat/data/kikuzo')
 #' }
 #'
-import_kikuzo <- function(path, paragraph_separator = '|'){
-
-    if (dir.exists(path)) {
-        dir <- path
-        file <- list.files(dir, full.names = TRUE, recursive = TRUE)
-        data <- data.frame()
-        for(f in file){
-            if(stri_detect_regex(f, '\\.html$|\\.htm$|\\.xhtml$', ignore.case = TRUE) && file.size(f)) {
-                tryCatch({
-                    data <- rbind(data, import_html(f, paragraph_separator))
-                },
-                error = function(e) {
-                    warning("Invalid file format: ", f)
-                })
-            }
-        }
-    } else if (file.exists(path) && file.size(path)) {
-        data <- import_html(path, paragraph_separator)
-    } else {
-        stop(path, " does not exist")
-    }
-    return(data)
+#'
+import_kikuzo <- function(path, paragraph_separator = "|") {
+    import_html(path, paragraph_separator, "kikuzo")
 }
 
 #' @import XML
-import_html <- function(file, paragraph_separator){
+import_kikuzo_html <- function(file, paragraph_separator){
 
     #Convert format
     cat('Reading', file, '\n')
@@ -52,22 +33,22 @@ import_html <- function(file, paragraph_separator){
     for (node in getNodeSet(dom, '//table[@class="topic-detail"]')) {
         node <- xmlParent(node)
         if (length(getNodeSet(node, './/div[@class="detail001"]'))) {
-            data <- rbind(data, extract_attrs(node, paragraph_separator))
+            data <- rbind(data, extract_kikuzo_attrs(node, paragraph_separator))
         }
     }
 
     data$date <- as.Date(stri_datetime_parse(data$date, 'yyyy年MM月dd日'))
-    data$page <- as.numeric(stri_replace_all_regex(data$page, "[^0-9]", ''))
-    data$length <- as.numeric(stri_replace_all_regex(data$length, "[^0-9]", ''))
+    data$page <- as.numeric(stri_replace_all_regex(data$page, "[^0-9]", ""))
+    data$length <- as.numeric(stri_replace_all_regex(data$length, "[^0-9]", ""))
     data$file <- basename(file)
 
     return(data)
 }
 
 #' @import stringi
-extract_attrs <- function(node, paragraph_separator) {
+extract_kikuzo_attrs <- function(node, paragraph_separator) {
 
-    attrs <- list(edition = '', date = '', length = '', section = '', head = '', body = '')
+    attrs <- list(edition = "", date = "", length = "", section = "", head = "", body = "")
 
     ps <- getNodeSet(node, './/div[@class="detail001"]/text()')
     p <- sapply(ps, xmlValue)
@@ -83,17 +64,8 @@ extract_attrs <- function(node, paragraph_separator) {
     attrs$length <- clean_text(xmlValue(tds[[6]]))
     #print(attrs)
 
-    if (attrs$date[1] == '' || is.na(attrs$date[1])) warning('Failed to extract date')
-    if (attrs$head[1] == '' || is.na(attrs$head[1])) warning('Failed to extract heading')
-    if (attrs$body[1] == '' || is.na(attrs$body[1])) warning('Failed to extract body text')
+    if (attrs$date[1] == "" || is.na(attrs$date[1])) warning('Failed to extract date')
+    if (attrs$head[1] == "" || is.na(attrs$head[1])) warning('Failed to extract heading')
+    if (attrs$body[1] == "" || is.na(attrs$body[1])) warning('Failed to extract body text')
     return(as.data.frame(attrs, stringsAsFactors = FALSE))
-}
-
-#' @import stringi
-clean_text <- function(str) {
-    str <- stri_replace_all_regex(str, '[[:^print:]]', ' ');
-    str <- stri_replace_all_regex(str, "[\\r\\n\\t]", ' ')
-    str <- stri_replace_all_regex(str, "\\s\\s+", ' ')
-    str <- stri_trim(str);
-    return(str)
 }
