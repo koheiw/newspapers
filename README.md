@@ -1,9 +1,10 @@
 # newspapers
 Import HTML files downloaded from newspaper databases
 
-## Supported databases
+## Supported formats
 
 - Asahi Shimbun Kikuzo `import_kikuzo()`
+- Dow Jones Faciva `import_factiva()`
 
 ## Install
 

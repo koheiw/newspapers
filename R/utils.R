@@ -50,3 +50,27 @@ is_number <- function(x) {
     return(TRUE)
 }
 
+#' Check and plot gaps in data
+#'
+#' @param x out from import functions, or any data.frame with "date" column
+#' @param size size of gap to detect specified in number of days, defaults to 7 days
+#' @param plot if \code{TRUE}, plot the number of items for each day
+#' @export
+check_gaps <- function(x, size = 7, plot = TRUE) {
+
+    if (class(x$date) != "Date" )
+        stop("data.frame must have a date column")
+    d <- sort(x$date)
+
+    tb <- table(factor(as.numeric(d), levels = seq.Date(min(d), max(d), by = "1 day")))
+    plot(tb, xaxt = "n", ylab = "Frequency")
+    axis(1, seq_along(tb), names(tb))
+
+    l <- diff(d) >= size
+    if (any(l)) {
+        warning("There are gaps after ", paste(d[l], collapse = ", "))
+        points(match(as.character(d[l]), names(tb)), rep(0, length(d[l])), col = "red")
+    }
+}
+
+
