@@ -8,9 +8,9 @@
 #' @export
 #' @examples
 #' \dontrun{
-#' one <- import_kikuzo('testthat/data/kikuzo/asahi_1985-01-01_001.html')
-#' two <- import_kikuzo('testthat/data/kikuzo/asahi_1985-01-01_002.html')
-#' all <- import_kikuzo('testthat/data/kikuzo')
+#' one <- import_kikuzo("testthat/data/kikuzo/asahi_1985-01-01_001.html")
+#' two <- import_kikuzo("testthat/data/kikuzo/asahi_1985-01-01_002.html")
+#' all <- import_kikuzo("testthat/data/kikuzo")
 #' }
 #'
 #'
@@ -22,7 +22,7 @@ import_kikuzo <- function(path, paragraph_separator = "|") {
 import_kikuzo_html <- function(file, paragraph_separator){
 
     #Convert format
-    cat('Reading', file, '\n')
+    cat("Reading", file, "\n")
 
     line <- readLines(file, warn = FALSE, encoding = "UTF-8")
     html <- paste0(line, collapse = "\n")

@@ -17,9 +17,10 @@ secotion, edntion) from HTML files downloaded from the Kikuzo database.
 }
 \examples{
 \dontrun{
-one <- import_kikuzo('testthat/data/kikuzo_1985-01-01_001.html')
-two <- import_kikuzo('testthat/data/kikuzo_1985-01-01_002.html')
-all <- import_kikuzo('testthat/data/html')
+one <- import_kikuzo("testthat/data/kikuzo/asahi_1985-01-01_001.html")
+two <- import_kikuzo("testthat/data/kikuzo/asahi_1985-01-01_002.html")
+all <- import_kikuzo("testthat/data/kikuzo")
 }
+
 
 }

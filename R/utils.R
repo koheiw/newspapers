@@ -10,6 +10,8 @@ import_html <- function(path, paragraph_separator = "|", source){
                 tryCatch({
                     if (source == "kikuzo") {
                         data <- rbind(data, import_kikuzo_html(f, paragraph_separator))
+                    } else if (source == "factiva") {
+                        data <- rbind(data, import_factiva_html(f, paragraph_separator))
                     }
                 },
                 error = function(e) {
@@ -20,6 +22,8 @@ import_html <- function(path, paragraph_separator = "|", source){
     } else if (file.exists(path) && file.size(path)) {
         if (source == "kikuzo") {
             data <- import_kikuzo_html(path, paragraph_separator)
+        } else if (source == "factiva") {
+            data <- import_factiva_html(path, paragraph_separator)
         }
     } else {
         stop(path, " does not exist")

@@ -4,13 +4,13 @@
 #' secotion, edntion) from HTML files downloaded from the factiva database.
 #' @param path either path to a HTML file or a directory that containe HTML files
 #' @param paragraph_separator a character to sperarate paragrahphs in body texts.
-#' @import stringi XML
+#' @import stringi XML utils
 #' @export
 #' @examples
 #' \dontrun{
-#' one <- import_factiva('testthat/data/factiva/asahi_1985-01-01_001.html')
-#' two <- import_factiva('testthat/data/factiva/asahi_1985-01-01_002.html')
-#' all <- import_factiva('testthat/data/factiva')
+#' one <- import_factiva("testthat/data/factiva/irish-independence_1_2017-11-14.html")
+#' two <- import_factiva("testthat/data/factiva/chosun_ilbo_1_2018-05-28.html")
+#' all <- import_factiva("testthat/data/factiva")
 #' }
 #'
 #'
@@ -42,15 +42,10 @@ import_factiva_html <- function(file, paragraph_separator){
     return(data)
 }
 
-file <- "/home/kohei/packages/newspapers/testthat/data/factiva/irish-independence_1_2017-11-14.html"
-
-out <- import_factiva_html("/home/kohei/packages/newspapers/testthat/data/factiva/irish-independence_1_2017-11-14.html", "|")
-
 #' @import stringi
 extract_factiva_attrs <- function(node, paragraph_separator) {
 
-    attrs <- list(edition = "", date = "", length = "", section = "", page = "",
-                  source = "", language = "", head = "", body = "")
+    attrs <- list(date = "", length = "", section = "", head = "", body = "")
 
     ps <- getNodeSet(node, './/p[contains(@class, "articleParagraph")]/text()')
     p <- sapply(ps, xmlValue)
@@ -58,14 +53,13 @@ extract_factiva_attrs <- function(node, paragraph_separator) {
     attrs$head <- clean_text(xmlValue(getNodeSet(node, './/span[contains(@class, "Headline")]')[[1]]))
 
     divs <- getNodeSet(node, './/div[not(@*)]')
-    attrs$section <- clean_text(xmlValue(divs[[6]]))
-    attrs$page <- clean_text(xmlValue(divs[[7]]))
-    attrs$length <- clean_text(xmlValue(divs[[2]]))
-    attrs$date <- clean_text(xmlValue(divs[[3]]))
-    attrs$source <- clean_text(xmlValue(divs[[4]]))
-    attrs$language <- clean_text(xmlValue(divs[[8]]))
+    v <- sapply(divs, function(x) clean_text(xmlValue(x)))
+    i <- head(which(stri_detect_regex(v, "^\\d+ words$")), 1)
 
-    #print(attrs)
+    attrs$length <- v[i]
+    attrs$date <- v[i + 1]
+    attrs$source <- v[i + 2]
+    attrs$section <- v[i + 4]
 
     if (attrs$date[1] == "" || is.na(attrs$date[1])) warning('Failed to extract date')
     if (attrs$head[1] == "" || is.na(attrs$head[1])) warning('Failed to extract heading')
