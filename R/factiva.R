@@ -25,6 +25,7 @@ import_factiva_html <- function(file, paragraph_separator){
     cat('Reading', file, '\n')
 
     line <- readLines(file, warn = FALSE, encoding = "UTF-8")
+    line <- stri_replace_all_fixed(line, c("<b>", "</b>"), "", vectorize_all = FALSE)
     html <- paste0(line, collapse = "\n")
 
     #Load as DOM object
@@ -47,7 +48,7 @@ extract_factiva_attrs <- function(node, paragraph_separator) {
 
     attrs <- list(date = "", length = "", section = "", head = "", body = "")
 
-    ps <- getNodeSet(node, './/p[contains(@class, "articleParagraph")]/text()')
+    ps <- getNodeSet(node, './/p[contains(@class, "articleParagraph")]//text()')
     p <- sapply(ps, xmlValue)
     attrs$body <- stri_trim(paste0(p, collapse = paste0(' ', paragraph_separator, ' ')))
     attrs$head <- clean_text(xmlValue(getNodeSet(node, './/span[contains(@class, "Headline")]')[[1]]))

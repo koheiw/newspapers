@@ -4,7 +4,7 @@
 \alias{check_gaps}
 \title{Check and plot gaps in data}
 \usage{
-check_gaps(x, size = 7, plot = TRUE)
+check_gaps(x, size = 7, plot = TRUE, from = NULL, to = NULL)
 }
 \arguments{
 \item{x}{out from import functions, or any data.frame with "date" column}
@@ -12,6 +12,10 @@ check_gaps(x, size = 7, plot = TRUE)
 \item{size}{size of gap to detect specified in number of days, defaults to 7 days}
 
 \item{plot}{if \code{TRUE}, plot the number of items for each day}
+
+\item{from}{start of the data collection period}
+
+\item{to}{end of the data collection period}
 }
 \description{
 Check and plot gaps in data
