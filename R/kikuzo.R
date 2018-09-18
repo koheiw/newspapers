@@ -4,7 +4,6 @@
 #' secotion, edntion) from HTML files downloaded from the Kikuzo database.
 #' @param path either path to a HTML file or a directory that containe HTML files
 #' @param paragraph_separator a character to sperarate paragrahphs in body texts.
-#' @import stringi XML
 #' @export
 #' @examples
 #' \dontrun{
@@ -18,7 +17,6 @@ import_kikuzo <- function(path, paragraph_separator = "|") {
     import_html(path, paragraph_separator, "kikuzo")
 }
 
-#' @import XML
 import_kikuzo_html <- function(file, paragraph_separator){
 
     #Convert format
@@ -45,7 +43,6 @@ import_kikuzo_html <- function(file, paragraph_separator){
     return(data)
 }
 
-#' @import stringi
 extract_kikuzo_attrs <- function(node, paragraph_separator) {
 
     attrs <- list(edition = "", date = "", length = "", section = "", head = "", body = "")

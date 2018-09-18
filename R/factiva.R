@@ -4,7 +4,7 @@
 #' secotion, edntion) from HTML files downloaded from the factiva database.
 #' @param path either path to a HTML file or a directory that containe HTML files
 #' @param paragraph_separator a character to sperarate paragrahphs in body texts.
-#' @import stringi XML utils
+#' @import utils
 #' @export
 #' @examples
 #' \dontrun{
@@ -18,7 +18,6 @@ import_factiva <- function(path, paragraph_separator = "|") {
     import_html(path, paragraph_separator, "factiva")
 }
 
-#' @import XML
 import_factiva_html <- function(file, paragraph_separator){
 
     #Convert format
@@ -43,7 +42,6 @@ import_factiva_html <- function(file, paragraph_separator){
     return(data)
 }
 
-#' @import stringi
 extract_factiva_attrs <- function(node, paragraph_separator) {
 
     attrs <- list(date = "", length = "", section = "", head = "", body = "")
@@ -55,7 +53,7 @@ extract_factiva_attrs <- function(node, paragraph_separator) {
 
     divs <- getNodeSet(node, './/div[not(@*)]')
     v <- sapply(divs, function(x) clean_text(xmlValue(x)))
-    i <- head(which(stri_detect_regex(v, "^\\d+ words$")), 1)
+    i <- head(which(stri_detect_regex(v, "^\\d+ (words|mots|Wörter|palabras|parole|語|palavras|слов|字)$")), 1)
 
     attrs$length <- v[i]
     attrs$date <- v[i + 1]

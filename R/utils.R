@@ -57,6 +57,7 @@ is_number <- function(x) {
 #' @param plot if \code{TRUE}, plot the number of items for each day
 #' @param from start of the data collection period
 #' @param to end of the data collection period
+#' @import graphics
 #' @export
 check_gaps <- function(x, size = 7, plot = TRUE, from = NULL, to = NULL) {
 
