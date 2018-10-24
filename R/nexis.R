@@ -10,11 +10,11 @@
 #' @export
 #' @examples
 #' \dontrun{
-#' irt <- import_nexis('tests/html/irish-times_1995-06-12_0001.html')
-#' afp <- import_nexis('tests/html/afp_2013-03-12_0501.html')
-#' gur <- import_nexis('tests/html/guardian_1986-01-01_0001.html')
-#' spg <- import_nexis('tests/html/spiegel_2012-02-01_0001.html', language_date = 'german')
-#' all <- import_nexis('tests/html', raw_date = TRUE)
+#' irt <- import_nexis('testthat/data/nexis/irish-times_1995-06-12_0001.html')
+#' afp <- import_nexis('testthat/data/nexis/afp_2013-03-12_0501.html')
+#' gur <- import_nexis('testthat/data/nexis/guardian_1986-01-01_0001.html')
+#' spg <- import_nexis('testthat/data/nexis/spiegel_2012-02-01_0001.html', language_date = 'german')
+#' all <- import_nexis('testthat/data/nexis', raw_date = TRUE)
 #' }
 import_nexis <- function(path, paragraph_separator = '|', language_date = c('english', 'german'), raw_date = FALSE){
 
