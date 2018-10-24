@@ -4,6 +4,7 @@
 #' secotion, edntion) from HTML files downloaded from the Kikuzo database.
 #' @param path either path to a HTML file or a directory that containe HTML files
 #' @param paragraph_separator a character to sperarate paragrahphs in body texts.
+#' @import utils XML
 #' @export
 #' @examples
 #' \dontrun{
@@ -11,8 +12,6 @@
 #' two <- import_kikuzo("testthat/data/kikuzo/asahi_1985-01-01_002.html")
 #' all <- import_kikuzo("testthat/data/kikuzo")
 #' }
-#'
-#'
 import_kikuzo <- function(path, paragraph_separator = "|") {
     import_html(path, paragraph_separator, "kikuzo")
 }

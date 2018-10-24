@@ -4,7 +4,7 @@
 #' secotion, edntion) from HTML files downloaded from the factiva database.
 #' @param path either path to a HTML file or a directory that containe HTML files
 #' @param paragraph_separator a character to sperarate paragrahphs in body texts.
-#' @import utils
+#' @import utils XML
 #' @export
 #' @examples
 #' \dontrun{

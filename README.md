@@ -1,10 +1,12 @@
 # newspapers
+
 Import HTML files downloaded from newspaper databases
 
 ## Supported formats
 
 - Asahi Shimbun Kikuzo `import_kikuzo()`
 - Dow Jones Faciva `import_factiva()`
+- LexisNexis Nexis `import_nexis()`
 
 ## Install the package
 
