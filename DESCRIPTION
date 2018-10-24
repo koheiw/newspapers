@@ -1,7 +1,7 @@
 Package: newspapers
 Type: Package
 Title: Import HTML files from newspaper databases
-Version: 0.2.3
+Version: 0.3
 Author: Kohei Watanabe
 Maintainer: Kohei Watanabe <watanabe.kohei@gmail.com>
 Description: Import HTML files from newspaper databases for quantitative text analysis.
@@ -17,5 +17,6 @@ Depends:
 Collate:
     'utils.R'
     'kikuzo.R'
+    'nexis.R'
     'factiva.R'
 RoxygenNote: 6.1.0
