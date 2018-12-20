@@ -45,9 +45,9 @@ require(xml2)
                 attrs$date <- str
             #if (str == "End of Document") break
             if (stri_detect_regex(str, "^Section:\\s"))
-                attrs$section <- stri_trim(stri_replace_first_fixed(str, "Section: ", ""))
+                attrs$section <- stri_trim(stri_replace_first_regex(str, "^Section:\\s", ""))
             if (stri_detect_regex(str, "^Length:\\s"))
-                attrs$length <- stri_trim(stri_replace_first_regex(str, "Length:\\s(\\d+) words", "$1"))
+                attrs$length <- stri_trim(stri_replace_first_regex(str, "Length:\\s(\\d+)\\swords", "$1"))
             if (is_body)
                 body <- c(body, str)
             if (str == "Body") is_body <- TRUE
