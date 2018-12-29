@@ -8,9 +8,9 @@
 #' @export
 #' @examples
 #' \dontrun{
-#' one <- import_kikuzo("testthat/data/kikuzo/asahi_1985-01-01_001.html")
-#' two <- import_kikuzo("testthat/data/kikuzo/asahi_1985-01-01_002.html")
-#' all <- import_kikuzo("testthat/data/kikuzo")
+#' one <- import_kikuzo("tests/data/kikuzo/asahi_1985-01-01_001.html")
+#' two <- import_kikuzo("tests/data/kikuzo/asahi_1985-01-01_002.html")
+#' all <- import_kikuzo("tests/data/kikuzo")
 #' }
 import_kikuzo <- function(path, paragraph_separator = "|") {
     import_html(path, paragraph_separator, "kikuzo")
@@ -46,7 +46,7 @@ extract_kikuzo_attrs <- function(node, paragraph_separator) {
 
     attrs <- list(edition = "", date = "", length = "", section = "", head = "", body = "")
 
-    ps <- getNodeSet(node, './/div[@class="detail001"]/text()')
+    ps <- getNodeSet(node, './/div[@class="detail001"]//text()')
     p <- sapply(ps, xmlValue)
     attrs$body <- stri_trim(paste0(p, collapse = paste0(' ', paragraph_separator, ' ')))
     #attrs$body <- clean_text(xmlValue(getNodeSet(node, './/div[@class="detail001"]')[[1]]))

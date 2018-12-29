@@ -24,5 +24,10 @@ test_that("test that import_kikuzo works with HTML downloaded manually", {
     expect_identical(nrow(data), 100L)
     expect_true(all(data$body != ""))
     expect_true(all(data$title != ""))
+    expect_true(all(stringi::stri_detect_fixed(data$body, "一帯一路")))
+})
 
+test_that("test that highlighted words are preserved", {
+    data <- import_kikuzo("../data/kikuzo/asahi_raw.html")
+    expect_true(all(stringi::stri_detect_fixed(data$body, "一帯一路")))
 })

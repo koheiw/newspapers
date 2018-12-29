@@ -33,4 +33,7 @@ test_that("test that import_factiva works with different language editions", {
 
 })
 
-
+test_that("test that highlighted words are preserved", {
+    data <- import_factiva("../data/factiva/irish-independence_1_2017-11-14.html")
+    expect_true(all(stringi::stri_detect_regex(data$body, "Dáil|speech|parliament|debate")))
+})

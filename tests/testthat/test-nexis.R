@@ -53,4 +53,3 @@ test_that("test that import_nexis works with Nexis Advance", {
     expect_true(all(data4$title != ""))
 
 })
-
