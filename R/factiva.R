@@ -32,7 +32,14 @@ import_factiva_html <- function(file, paragraph_separator){
     data <- data.frame()
     for (node in getNodeSet(dom, '//div[contains(@class, "Article")]')) {
         node <- xmlParent(node)
-        data <- rbind(data, extract_factiva_attrs(node, paragraph_separator))
+        attrs <- extract_factiva_attrs(node, paragraph_separator)
+        if (attrs$date[1] == "" || is.na(attrs$date[1]))
+            warning('Failed to extract date in ', file, call. = FALSE)
+        if (attrs$head[1] == "" || is.na(attrs$head[1]))
+            warning('Failed to extract heading in ', file, call. = FALSE)
+        if (attrs$body[1] == "" || is.na(attrs$body[1]))
+            warning('Failed to extract body text in ', file, call. = FALSE)
+        data <- rbind(data, as.data.frame(attrs, stringsAsFactors = FALSE))
     }
 
     data$date <- as.Date(stri_datetime_parse(data$date, 'dd MMMM yyyy'))
@@ -60,8 +67,5 @@ extract_factiva_attrs <- function(node, paragraph_separator) {
     attrs$source <- v[i + 2]
     attrs$section <- v[i + 4]
 
-    if (attrs$date[1] == "" || is.na(attrs$date[1])) warning('Failed to extract date')
-    if (attrs$head[1] == "" || is.na(attrs$head[1])) warning('Failed to extract heading')
-    if (attrs$body[1] == "" || is.na(attrs$body[1])) warning('Failed to extract body text')
-    return(as.data.frame(attrs, stringsAsFactors = FALSE))
+    return(attrs)
 }

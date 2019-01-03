@@ -30,7 +30,14 @@ import_kikuzo_html <- function(file, paragraph_separator){
     for (node in getNodeSet(dom, '//table[@class="topic-detail"]')) {
         node <- xmlParent(node)
         if (length(getNodeSet(node, './/div[@class="detail001"]'))) {
-            data <- rbind(data, extract_kikuzo_attrs(node, paragraph_separator))
+            attrs <- extract_kikuzo_attrs(node, paragraph_separator)
+            if (attrs$date[1] == "" || is.na(attrs$date[1]))
+                warning('Failed to extract date in ', file, call. = FALSE)
+            if (attrs$head[1] == "" || is.na(attrs$head[1]))
+                warning('Failed to extract heading in ', file, call. = FALSE)
+            if (attrs$body[1] == "" || is.na(attrs$body[1]))
+                warning('Failed to extract body text in ', file, call. = FALSE)
+            data <- rbind(data, as.data.frame(attrs, stringsAsFactors = FALSE))
         }
     }
 
@@ -59,9 +66,5 @@ extract_kikuzo_attrs <- function(node, paragraph_separator) {
     attrs$page <- clean_text(xmlValue(tds[[5]]))
     attrs$length <- clean_text(xmlValue(tds[[6]]))
     #print(attrs)
-
-    if (attrs$date[1] == "" || is.na(attrs$date[1])) warning('Failed to extract date')
-    if (attrs$head[1] == "" || is.na(attrs$head[1])) warning('Failed to extract heading')
-    if (attrs$body[1] == "" || is.na(attrs$body[1])) warning('Failed to extract body text')
-    return(as.data.frame(attrs, stringsAsFactors = FALSE))
+    return(attrs)
 }

@@ -10,7 +10,16 @@ import_nexis_uk_html <- function(file, paragraph_separator, language_date, raw_d
     dom <- htmlParse(html, encoding = "UTF-8")
     data <- data.frame()
     for(doc in getNodeSet(dom, '//doc')){
-        data <- rbind(data, extract_nexis_uk_attrs(doc, paragraph_separator, language_date, raw_date))
+        attrs <- extract_nexis_uk_attrs(doc, paragraph_separator, language_date, raw_date)
+        if (attrs$pub[1] == '' || is.na(attrs$pub[1]))
+            warning('Failed to extract publication name in ', file, call. = FALSE)
+        if (attrs$date[1] == '' || is.na(attrs$date[1]))
+            warning('Failed to extract date in ', file, call. = FALSE)
+        if (attrs$head[1] == '' || is.na(attrs$head[1]))
+            warning('Failed to extract heading in ', file, call. = FALSE)
+        if (attrs$body[1] == '' || is.na(attrs$body[1]))
+            warning('Failed to extract body text in ', file, call. = FALSE)
+        data <- rbind(data, as.data.frame(attrs, stringsAsFactors = FALSE))
     }
     colnames(data) <- c('pub', 'edition', 'date', 'byline', 'length', 'section', 'head', 'body')
     data$file <- basename(file)
@@ -89,11 +98,7 @@ extract_nexis_uk_attrs <- function(node, paragraph_separator, language_date, raw
         }
         i <- i + 1
     }
-    if (attrs$pub[1] == '' || is.na(attrs$pub[1])) warning('Failed to extract publication name')
-    if (attrs$date[1] == '' || is.na(attrs$date[1])) warning('Failed to extract date')
-    if (attrs$head[1] == '' || is.na(attrs$head[1])) warning('Failed to extract heading')
-    if (attrs$body[1] == '' || is.na(attrs$body[1])) warning('Failed to extract body text')
-    return(as.data.frame(attrs, stringsAsFactors = FALSE))
+    return(attrs)
 }
 
 

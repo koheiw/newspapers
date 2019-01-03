@@ -43,6 +43,14 @@ import_nexis_advance_docx <- function(file, paragraph_separator, language_date, 
         }
         body <- body[nzchar(body)]
         attrs$body <- paste(body, collapse = " ")
+        if (attrs$pub[1] == '' || is.na(attrs$pub[1]))
+            warning('Failed to extract publication name in ', file, call. = FALSE)
+        if (attrs$date[1] == '' || is.na(attrs$date[1]))
+            warning('Failed to extract date in ', file, call. = FALSE)
+        if (attrs$head[1] == '' || is.na(attrs$head[1]))
+            warning('Failed to extract heading in ', file, call. = FALSE)
+        if (attrs$body[1] == '' || is.na(attrs$body[1]))
+            warning('Failed to extract body text in ', file, call. = FALSE)
         data <- rbind(data, as.data.frame(attrs, stringsAsFactors = FALSE))
     }
     return(data)
