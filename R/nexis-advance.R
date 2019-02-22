@@ -3,15 +3,15 @@ import_nexis_advance_docx <- function(file, paragraph_separator, language_date, 
     cat('Reading', file, '\n')
 
     unzip(file, "word/document.xml", exdir = tempdir())
-    file <- paste0(tempdir(), "/word/document.xml")
-    xml <- paste0(readLines(file, warn = FALSE, encoding = "UTF-8"), collapse = "")
+    xml <- paste0(readLines(paste0(tempdir(), "/word/document.xml"),
+                            warn = FALSE, encoding = "UTF-8"), collapse = "")
     dom <- xmlParse(xml, encoding = "UTF-8")
     elems <- getNodeSet(dom, "//w:p[./w:hyperlink/w:r/w:rPr/w:sz[@w:val='28'] and
                                    ./w:hyperlink/w:r/w:rPr/w:color[@w:val='0077CC']]")
     n <- length(elems)
     data <- data.frame()
     for (i in seq(n)) {
-        attrs <- list(pub = "", date = "", head = "", body = "")
+        attrs <- list(pub = "", date = "", head = "", body = "", section = "", length = 0)
         elem <- elems[[i]]
         body <- character()
         is_body <- FALSE
