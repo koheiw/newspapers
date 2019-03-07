@@ -4,7 +4,7 @@
 \alias{import_kikuzo}
 \title{Extract texts and meta data from Kikuzo HTML files}
 \usage{
-import_kikuzo(path, paragraph_separator = "|")
+import_kikuzo(path, paragraph_separator = "\\n\\n")
 }
 \arguments{
 \item{path}{either path to a HTML file or a directory that containe HTML files}

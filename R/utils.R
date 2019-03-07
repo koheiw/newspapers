@@ -1,5 +1,5 @@
 
-import_html <- function(path, paragraph_separator = "|", source){
+import_html <- function(path, paragraph_separator = "\n\n", source){
 
     if (dir.exists(path)) {
         dir <- path

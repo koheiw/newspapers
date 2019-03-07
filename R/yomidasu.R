@@ -12,7 +12,7 @@
 #' two <- import_yomidasu("tests/data/yomidasu/yomidasu_2018-01-01_001.html")
 #' all <- import_yomidasu("tests/data/yomidasu/")
 #' }
-import_yomidasu <- function(path, paragraph_separator = "|") {
+import_yomidasu <- function(path, paragraph_separator = "\n\n") {
     import_html(path, paragraph_separator, "yomidasu")
 }
 

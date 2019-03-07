@@ -4,7 +4,7 @@
 \alias{import_nexis}
 \title{Extract texts and meta data from Nexis files}
 \usage{
-import_nexis(path, paragraph_separator = "|",
+import_nexis(path, paragraph_separator = "\\n\\n",
   language_date = c("english", "german"), raw_date = FALSE,
   variant = c("uk", "advance"))
 }
