@@ -40,7 +40,7 @@ import_yomidasu_html <- function(file, paragraph_separator){
         }
     }
 
-    data$date <- stri_replace_first_regex(data$date, "(\\d+)\\.(\\d+)\\.(\\d+)\\.", "$1-$2-$3")
+    data$date <- stri_replace_first_regex(data$date, "(\\d+)\\.(\\d+)\\.(\\d+)", "$1-$2-$3")
     data$page <- as.numeric(stri_replace_all_regex(data$page, "[^0-9]", ""))
     data$length <- as.numeric(stri_replace_all_regex(data$length, "[^0-9]", ""))
     data$file <- basename(file)
