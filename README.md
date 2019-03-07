@@ -5,6 +5,7 @@ Import files downloaded from newspaper databases
 ## Supported formats
 
 - Asahi Shimbun Kikuzo `import_kikuzo()`
+- Yomiuri Shimbun Yomidasu `import_yomidasu()`
 - Dow Jones Faciva `import_factiva()`
 - Nexis UK and Nexis Advance `import_nexis()`
 

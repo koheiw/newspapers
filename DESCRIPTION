@@ -17,6 +17,7 @@ Depends:
 Collate:
     'utils.R'
     'kikuzo.R'
+    'yomidasu.R'
     'nexis.R'
     'nexis-advance.R'
     'nexis-uk.R'

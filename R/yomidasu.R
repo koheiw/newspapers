@@ -1,0 +1,68 @@
+#' Extract texts and meta data from Yomidasu HTML files
+#'
+#' This extract headings, body texts and meta data (date, byline, length,
+#' secotion, edntion) from HTML files downloaded from the Yomidasu database.
+#' @param path either path to a HTML file or a directory that containe HTML files
+#' @param paragraph_separator a character to sperarate paragrahphs in body texts.
+#' @import utils XML
+#' @export
+#' @examples
+#' \dontrun{
+#' one <- import_yomidasu("tests/data/yomidasu/yomidasu_1987-01-01_001.html")
+#' two <- import_yomidasu("tests/data/yomidasu/yomidasu_2018-01-01_001.html")
+#' all <- import_yomidasu("tests/data/yomidasu/")
+#' }
+import_yomidasu <- function(path, paragraph_separator = "|") {
+    import_html(path, paragraph_separator, "yomidasu")
+}
+
+import_yomidasu_html <- function(file, paragraph_separator){
+
+    #Convert format
+    cat("Reading", file, "\n")
+
+    line <- readLines(file, warn = FALSE, encoding = "UTF-8")
+    html <- paste0(line, collapse = "\n")
+
+    #Load as DOM object
+    dom <- htmlParse(html, encoding = "UTF-8")
+    data <- data.frame()
+    for (node in getNodeSet(dom, '//div[@id="heiseiDetailArea"]')) {
+        if (length(getNodeSet(node, './/table[@class="contentsTable"]'))) {
+            attrs <- extract_yomidasu_attrs(node, paragraph_separator)
+            if (attrs$date[1] == "" || is.na(attrs$date[1]))
+                warning('Failed to extract date in ', file, call. = FALSE)
+            if (attrs$head[1] == "" || is.na(attrs$head[1]))
+                warning('Failed to extract heading in ', file, call. = FALSE)
+            if (attrs$body[1] == "" || is.na(attrs$body[1]))
+                warning('Failed to extract body text in ', file, call. = FALSE)
+            data <- rbind(data, as.data.frame(attrs, stringsAsFactors = FALSE))
+        }
+    }
+
+    data$date <- stri_replace_first_regex(data$date, "(\\d+)\\.(\\d+)\\.(\\d+)\\.", "$1-$2-$3")
+    data$page <- as.numeric(stri_replace_all_regex(data$page, "[^0-9]", ""))
+    data$length <- as.numeric(stri_replace_all_regex(data$length, "[^0-9]", ""))
+    data$file <- basename(file)
+
+    return(data)
+}
+
+extract_yomidasu_attrs <- function(node, paragraph_separator) {
+
+    attrs <- list(edition = "", date = "", length = "", section = "", head = "", body = "")
+
+    ps <- getNodeSet(node, 'following-sibling::div[1]//p[@class="mb10"]//text()')
+    p <- sapply(ps, xmlValue)
+    attrs$body <- stri_replace_all_regex(paste0(p, collapse = ""), "\\p{P}　",
+                                         paste0("。", paragraph_separator, "　"))
+
+    tds <- getNodeSet(node, './/tr/th')
+    attrs$date <- clean_text(xmlValue(tds[[2]]))
+    attrs$head <- clean_text(xmlValue(tds[[3]]))
+    attrs$edition <- clean_text(xmlValue(tds[[4]]))
+    attrs$section <- clean_text(xmlValue(tds[[5]]))
+    attrs$page <- clean_text(xmlValue(tds[[6]]))
+    attrs$length <- clean_text(xmlValue(tds[[7]]))
+    return(attrs)
+}
