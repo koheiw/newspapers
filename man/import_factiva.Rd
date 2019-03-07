@@ -4,7 +4,7 @@
 \alias{import_factiva}
 \title{Extract texts and meta data from factiva HTML files}
 \usage{
-import_factiva(path, paragraph_separator = "|")
+import_factiva(path, paragraph_separator = "\\n\\n")
 }
 \arguments{
 \item{path}{either path to a HTML file or a directory that containe HTML files}

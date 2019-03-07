@@ -14,7 +14,7 @@
 #' }
 #'
 #'
-import_factiva <- function(path, paragraph_separator = "|") {
+import_factiva <- function(path, paragraph_separator = "\n\n") {
     import_html(path, paragraph_separator, "factiva")
 }
 

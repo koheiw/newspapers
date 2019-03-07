@@ -27,8 +27,9 @@
 #' wsp <- import_nexis("tests/data/nexis/washington-post.docx", variant = "advance")
 #' all <- import_nexis("tests/data/nexis/", variant = "advance")
 #' }
-import_nexis <- function(path, paragraph_separator = '|', language_date = c('english', 'german'), raw_date = FALSE,
-                         variant = c("uk", "advance")){
+import_nexis <- function(path, paragraph_separator = "\n\n",
+                         language_date = c('english', 'german'),
+                         raw_date = FALSE, variant = c("uk", "advance")){
 
     language_date <- match.arg(language_date)
     variant <- match.arg(variant)
