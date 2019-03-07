@@ -11,7 +11,7 @@ import_html <- function(path, paragraph_separator = "\n\n", source){
                     if (source == "kikuzo") {
                         data <- rbind(data, import_kikuzo_html(f, paragraph_separator))
                     } else if (source == "yomidasu") {
-                        data <- import_yomidasu_html(f, paragraph_separator)
+                        data <- rbind(data, import_yomidasu_html(f, paragraph_separator))
                     } else if (source == "factiva") {
                         data <- rbind(data, import_factiva_html(f, paragraph_separator))
                     }
