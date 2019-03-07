@@ -8,8 +8,8 @@
 #' @export
 #' @examples
 #' \dontrun{
-#' one <- import_kikuzo("tests/data/kikuzo/asahi_1985-01-01_001.html")
-#' two <- import_kikuzo("tests/data/kikuzo/asahi_1985-01-01_002.html")
+#' one <- import_kikuzo("tests/data/kikuzo/kikuzo_1985-01-01_001.html")
+#' two <- import_kikuzo("tests/data/kikuzo/kikuzo_1985-01-01_002.html")
 #' all <- import_kikuzo("tests/data/kikuzo")
 #' }
 import_kikuzo <- function(path, paragraph_separator = "\n\n") {
