@@ -27,17 +27,15 @@ import_yomidasu_html <- function(file, paragraph_separator){
     #Load as DOM object
     dom <- htmlParse(html, encoding = "UTF-8")
     data <- data.frame()
-    for (node in getNodeSet(dom, '//div[@id="heiseiDetailArea"]')) {
-        if (length(getNodeSet(node, './/table[@class="contentsTable"]'))) {
-            attrs <- extract_yomidasu_attrs(node, paragraph_separator)
-            if (attrs$date[1] == "" || is.na(attrs$date[1]))
-                warning('Failed to extract date in ', file, call. = FALSE)
-            if (attrs$head[1] == "" || is.na(attrs$head[1]))
-                warning('Failed to extract heading in ', file, call. = FALSE)
-            if (attrs$body[1] == "" || is.na(attrs$body[1]))
-                warning('Failed to extract body text in ', file, call. = FALSE)
-            data <- rbind(data, as.data.frame(attrs, stringsAsFactors = FALSE))
-        }
+    for (node in getNodeSet(dom, '//div[@id="heiseiDetailArea"]/table[@class="contentsTable"]')) {
+        attrs <- extract_yomidasu_attrs(node, paragraph_separator)
+        if (attrs$date[1] == "")
+            warning('Failed to extract date in ', file, call. = FALSE)
+        if (attrs$head[1] == "")
+            warning('Failed to extract heading in ', file, call. = FALSE)
+        if (attrs$length[1] != "字" && attrs$body[1] == "")
+            warning('Failed to extract body text in ', file, call. = FALSE)
+        data <- rbind(data, as.data.frame(attrs, stringsAsFactors = FALSE))
     }
 
     data$date <- stri_replace_first_regex(data$date, "(\\d+)\\.(\\d+)\\.(\\d+)", "$1-$2-$3")
@@ -52,7 +50,7 @@ extract_yomidasu_attrs <- function(node, paragraph_separator) {
 
     attrs <- list(edition = "", date = "", length = "", section = "", head = "", body = "")
 
-    ps <- getNodeSet(node, 'following-sibling::div[1]//p[@class="mb10"]//text()')
+    ps <- getNodeSet(node, '../following-sibling::div[1]//p[@class="mb10"]//text()')
     p <- sapply(ps, xmlValue)
     attrs$body <- stri_replace_all_regex(paste0(p, collapse = ""), "\\p{P}　",
                                          paste0("。", paragraph_separator, "　"))
@@ -64,5 +62,6 @@ extract_yomidasu_attrs <- function(node, paragraph_separator) {
     attrs$section <- clean_text(xmlValue(tds[[5]]))
     attrs$page <- clean_text(xmlValue(tds[[6]]))
     attrs$length <- clean_text(xmlValue(tds[[7]]))
+
     return(attrs)
 }
