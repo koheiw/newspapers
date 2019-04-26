@@ -1,7 +1,7 @@
 #' Extract texts and meta data from factiva HTML files
 #'
 #' This extract headings, body texts and meta data (date, byline, length,
-#' secotion, edntion) from HTML files downloaded from the factiva database.
+#' secotion, edntion) from HTML files downloaded from the Factiva database.
 #' @param path either path to a HTML file or a directory that containe HTML files
 #' @param paragraph_separator a character to sperarate paragrahphs in body texts.
 #' @import utils XML

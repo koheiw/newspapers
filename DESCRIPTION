@@ -1,7 +1,7 @@
 Package: newspapers
 Type: Package
 Title: Import files downloaded from newspaper databases
-Version: 0.3.4
+Version: 0.3.5
 Author: Kohei Watanabe
 Maintainer: Kohei Watanabe <watanabe.kohei@gmail.com>
 Description: Import files downloaded from newspaper databases for quantitative text analysis.
@@ -9,17 +9,11 @@ License: GPL-3
 Encoding: UTF-8
 LazyData: true
 Import:
-    utils
+    utils,
+    XML
 Depends:
     R (>= 3.2.2),
     stringi,
-    XML
-Collate:
-    'utils.R'
-    'kikuzo.R'
-    'yomidasu.R'
-    'nexis.R'
-    'nexis-advance.R'
-    'nexis-uk.R'
-    'factiva.R'
+    XML,
+    rio
 RoxygenNote: 6.1.1

@@ -13,7 +13,7 @@ import_factiva(path, paragraph_separator = "\\n\\n")
 }
 \description{
 This extract headings, body texts and meta data (date, byline, length,
-secotion, edntion) from HTML files downloaded from the factiva database.
+secotion, edntion) from HTML files downloaded from the Factiva database.
 }
 \examples{
 \dontrun{
