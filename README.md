@@ -8,6 +8,7 @@ Import files downloaded from newspaper databases
 - Yomiuri Shimbun Yomidasu `import_yomidasu()`
 - Dow Jones Faciva `import_factiva()`
 - Nexis UK and Nexis Advance `import_nexis()`
+- Integrum `import_integrum()`
 
 ## Install the package
 

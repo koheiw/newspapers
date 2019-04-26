@@ -15,5 +15,5 @@ Depends:
     R (>= 3.2.2),
     stringi,
     XML,
-    rio
+    readxl
 RoxygenNote: 6.1.1
