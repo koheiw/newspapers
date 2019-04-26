@@ -75,19 +75,21 @@ check_gaps <- function(x, size = 7, plot = TRUE, from = NULL, to = NULL) {
 
     tb <- table(factor(as.character(x$date),
                        levels = as.character(seq.Date(as.Date(from), as.Date(to), by = "1 day"))))
-    plot(tb, xaxt = "n", ylab = "Frequency")
-    axis(1, seq_along(tb), names(tb))
+    plot(as.Date(names(tb)), as.numeric(tb), type = "h",
+         ylab = "Frequency", xlab = "", xaxt = "n", lwd = 2, lend = 1)
+    axis(1, as.Date(names(tb)), names(tb))
 
     date <- unique(sort(x$date))
     l <- diff(date) >= size
     m <- max(tb)
     if (any(l)) {
         warning("There are gaps after ", paste(date[l], collapse = ", "), call. = FALSE)
-        for (i in match(as.character(date), names(tb))[l]) {
-            polygon(c(i, i, i + size, i + size, i), c(m, 0, 0, m, m),
-                    col = rgb(1, 0, 0, 0.5), border = FALSE)
+        for (i in seq_len(length(date) - 1)) {
+            if (date[i + 1] - date[i] >= size) {
+                polygon(c(date[i], date[i], date[i + 1], date[i + 1], date[i]),
+                        c(m, 0, 0, m, m),
+                        col = rgb(1, 0, 0, 0.5), border = FALSE)
+            }
         }
     }
 }
-
-
