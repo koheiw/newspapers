@@ -42,7 +42,7 @@ import_integrum <- function(path, paragraph_separator = "\n\n") {
 import_xlsx <- function(file, paragraph_separator) {
     cat('Reading', file, '\n')
     result <- rio::import(file)
-    result <- result[[1:5]]
+    result <- result[,seq(5)]
     colnames(result) <- c("source", "date", "time", "head", "body")
     result$body <- stri_replace_all_fixed(result$body, "\r\n\r\n", paragraph_separator)
     result$date <- as.Date(sapply(result$date, fix_date))
