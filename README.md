@@ -2,13 +2,15 @@
 
 Import files downloaded from newspaper databases
 
-## Supported formats
+## Supported databases and formats
 
-- Asahi Shimbun Kikuzo `import_kikuzo()`
-- Yomiuri Shimbun Yomidasu `import_yomidasu()`
-- Dow Jones Faciva `import_factiva()`
-- Nexis UK and Nexis Advance `import_nexis()`
-- Integrum `import_integrum()`
+Database | File type | Function
+-- | -- | --
+Asahi Shimbun Kikuzo | .html | `import_kikuzo()`
+Yomiuri Shimbun Yomidasu | .html | `import_yomidasu()`
+Dow Jones Faciva | .html | `import_factiva()`
+Nexis UK and Nexis Advance | .docx .html | `import_nexis()`
+Integrum | .xlsx | `import_integrum()`
 
 ## Install the package
 
