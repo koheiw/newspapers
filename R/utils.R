@@ -61,13 +61,15 @@ is_number <- function(x) {
 #' @param plot if \code{TRUE}, plot the number of items for each day
 #' @param from start of the data collection period
 #' @param to end of the data collection period
+#' @param ... additional arguments passed to \code{plot}
 #' @import graphics grDevices
 #' @export
-check_gaps <- function(x, size = 7, plot = TRUE, from = NULL, to = NULL) {
+check_gaps <- function(x, size = 7, plot = TRUE, from = NULL, to = NULL, ...) {
 
     if (class(x$date) != "Date" )
-        stop("data.frame must have a date column")
+        stop("x must have a date column")
 
+    x <- x[!is.na(x$date),,drop = FALSE]
     if (is.null(from))
         from <- min(x$date)
     if (is.null(to))
@@ -76,15 +78,25 @@ check_gaps <- function(x, size = 7, plot = TRUE, from = NULL, to = NULL) {
     tb <- table(factor(as.character(x$date),
                        levels = as.character(seq.Date(as.Date(from), as.Date(to), by = "1 day"))))
     plot(as.Date(names(tb)), as.numeric(tb), type = "h",
-         ylab = "Frequency", xlab = "", xaxt = "n", lwd = 2, lend = 1)
-    axis(1, as.Date(names(tb)), names(tb))
+         ylab = "Frequency", xlab = "", xaxt = "n", lend = 2, ...)
+
+    is_year <- stri_endswith_fixed(names(tb), "01-01")
+    is_month <- stri_endswith_fixed(names(tb), "01")
+    if (length(names(tb)) > 365) {
+        is_first <- stri_endswith_fixed(names(tb), "01-01")
+        axis(1, as.Date(names(tb))[is_year], stri_sub(names(tb)[is_year], 1, 4))
+        axis(1, as.Date(names(tb))[is_month], labels = NA, tck = 0.01)
+    } else {
+        axis(1, as.Date(names(tb))[is_month], stri_sub(names(tb)[is_month], 1, 7))
+        axis(1, as.Date(names(tb)), labels = NA, tck = 0.01)
+    }
 
     date <- unique(sort(x$date))
     l <- diff(date) >= size
     m <- max(tb)
     if (any(l)) {
         warning("There are gaps after ", paste(date[l], collapse = ", "), call. = FALSE)
-        for (i in seq_len(length(date) - 1)) {
+        for (i in seq_along(l)) {
             if (date[i + 1] - date[i] >= size) {
                 polygon(c(date[i], date[i], date[i + 1], date[i + 1], date[i]),
                         c(m, 0, 0, m, m),
