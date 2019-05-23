@@ -83,7 +83,7 @@ check_gaps <- function(x, size = 7, plot = TRUE, from = NULL, to = NULL, ...) {
 
     is_year <- stri_endswith_fixed(names(tb), "01-01")
     is_month <- stri_endswith_fixed(names(tb), "01")
-    if (length(names(tb)) > 365) {
+    if (length(names(tb)) > 366) {
         is_first <- stri_endswith_fixed(names(tb), "01-01")
         axis(1, as.Date(names(tb))[is_year], stri_sub(names(tb)[is_year], 1, 4))
         axis(1, as.Date(names(tb))[is_month], labels = NA, tck = 0.01)
