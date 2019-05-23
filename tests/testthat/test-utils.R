@@ -9,6 +9,7 @@ test_that("test that check_gaps works", {
     expect_warning(check_gaps(dat_gap7, size = 3), "3-day gaps after 2019-03-31")
     expect_warning(check_gaps(dat_gap7, size = 7), "7-day gaps after 2019-03-31")
     expect_silent(check_gaps(dat_gap7, size = 14))
+    expect_silent(check_gaps(dat_gap7, from = "2019-06-01", to = "2019-12-31"))
 
     dat_gap14 <- subset(dat, date < as.Date("2019-09-01") | as.Date("2019-09-14") < date)
     expect_warning(check_gaps(dat_gap14, size = 14), "14-day gaps after 2019-08-31")

@@ -75,7 +75,7 @@ check_gaps <- function(x, size = 7, plot = TRUE, from = NULL, to = NULL, ...) {
     if (is.null(to))
         to <- max(x$date)
 
-    x <- subset(x, from <= date && date <= to)
+    x <- subset(x, from <= date & date <= to)
     tb <- table(factor(as.character(x$date),
                        levels = as.character(seq.Date(as.Date(from), as.Date(to), by = "1 day"))))
     plot(as.Date(names(tb)), as.numeric(tb), type = "h",
