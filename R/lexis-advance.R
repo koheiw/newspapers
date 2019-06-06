@@ -1,5 +1,5 @@
 
-import_nexis_advance_docx <- function(file, paragraph_separator, language_date, raw_date) {
+import_lexis_advance_docx <- function(file, paragraph_separator, language_date, raw_date) {
     cat('Reading', file, '\n')
 
     unzip(file, "word/document.xml", exdir = tempdir())
