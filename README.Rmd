@@ -1,3 +1,18 @@
+---
+output: github_document
+---
+
+```{r, echo = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "##",
+  fig.path = "man/images/",
+  fig.width = 6,
+  fig.height = 2,
+  dpi = 150
+)
+```
+
 # newspapers
 
 Import files downloaded from newspaper databases
