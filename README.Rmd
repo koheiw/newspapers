@@ -9,16 +9,30 @@ Database | File type | Function
 Asahi Shimbun Kikuzo | .html | `import_kikuzo()`
 Yomiuri Shimbun Yomidasu | .html | `import_yomidasu()`
 Dow Jones Faciva | .html | `import_factiva()`
-Nexis UK and Nexis Advance | .docx .html | `import_nexis()`
+Nexis UK | .html | `import_nexis()`
+Lexis Advance | .docx | `import_lexis()`
 Integrum | .xlsx | `import_integrum()`
 
 ## Install the package
 
-```
+```{r eval=FALSE}
 install.packages("devtools")
 devtools::install_github("koheiw/newspapers")
 ```
-## Download HTML files
+
+## Import files
+
+```{r}
+require(newspapers, quietly = TRUE)
+dat <- import_nexis("tests/data/nexis/guardian_1986-01-01_0001.html")
+dat$date <- as.Date(dat$date)
+```
+
+```{r, asis=TRUE, echo=FALSE}
+knitr::kable(head(dat[c("pub", "edition", "date", "byline", "length", "section", "head")]))
+```
+
+## Download files
 
 ### Asahi Shimbun Kikuzo
 

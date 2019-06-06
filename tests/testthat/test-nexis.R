@@ -30,7 +30,7 @@ test_that("test that import_nexis works with Nexis UK", {
 })
 
 
-test_that("test that import_nexis works with Nexis Advance", {
+test_that("test that import_nexis works with Nexis Advance but deprecated", {
 
     dat1 <- import_nexis('../data/nexis/nyt.docx', variant = "advance")
     expect_identical(nrow(dat1), 50L)
