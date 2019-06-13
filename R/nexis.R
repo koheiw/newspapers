@@ -9,7 +9,7 @@
 #' @param language_date a character to specify langauge-dependent date format.
 #' @param raw_date return date of publication without parsing if \code{TRUE}.
 #' @param variant specify type of Nexis database files downloaded. Files should
-#'   be HTML (.html) for Nexis UK.
+#'   be HTML (.html) for Nexis UK or MS Word (.docx) for Nexis Advance.
 #' @import utils XML
 #' @export
 #' @examples
@@ -20,6 +20,12 @@
 #' gur <- import_nexis("tests/data/nexis/guardian_1986-01-01_0001.html")
 #' spg <- import_nexis("tests/data/nexis/spiegel_2012-02-01_0001.html", language_date = "german")
 #' all <- import_nexis("tests/data/nexis", raw_date = TRUE)
+#'
+#' # Nexis Advance
+#' nyt <- import_nexis("tests/data/nexis/nyt.docx", variant = "advance")
+#' ust <- import_nexis("tests/data/nexis/usa-today.docx", variant = "advance")
+#' wsp <- import_nexis("tests/data/nexis/washington-post.docx", variant = "advance")
+#' all <- import_nexis("tests/data/nexis/", variant = "advance")
 #' }
 import_nexis <- function(path, paragraph_separator = "\n\n",
                          language_date = c('english', 'german'),
@@ -38,9 +44,8 @@ import_nexis <- function(path, paragraph_separator = "\n\n",
                     data <- rbind(data, import_nexis_uk_html(f, paragraph_separator, language_date, raw_date))
                 }
             } else {
-                .Deprecated("import_lexis()")
                 if(stri_detect_regex(f, '\\.docx$', ignore.case = TRUE)){
-                    data <- rbind(data, import_lexis_advance_docx(f, paragraph_separator, language_date, raw_date))
+                    data <- rbind(data, import_nexis_advance_docx(f, paragraph_separator, language_date, raw_date))
                 }
             }
         }
@@ -48,8 +53,7 @@ import_nexis <- function(path, paragraph_separator = "\n\n",
         if (variant == "uk") {
             data <- import_nexis_uk_html(path, paragraph_separator, language_date, raw_date)
         } else {
-            .Deprecated("import_lexis()")
-            data <- import_lexis_advance_docx(path, paragraph_separator, language_date, raw_date)
+            data <- import_nexis_advance_docx(path, paragraph_separator, language_date, raw_date)
         }
     } else {
         stop(path, " does not exist")

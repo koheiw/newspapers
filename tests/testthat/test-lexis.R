@@ -22,8 +22,13 @@ test_that("test that import_lexis works with lexis Advance", {
     expect_true(all(dat4$body != ""))
     expect_true(all(dat4$title != ""))
 
+    dat5 <- import_lexis('../data/lexis/nyt2.docx', variant = "advance")
+    expect_identical(nrow(dat5), 100L)
+    expect_true(all(dat5$body != ""))
+    expect_true(all(dat5$title != ""))
+
     dat_all <- import_lexis('../data/lexis', variant = "advance")
-    expect_identical(nrow(dat_all), 50L + 50L + 7L + 100L)
+    expect_identical(nrow(dat_all), 50L + 50L + 7L + 100L + 100L)
     expect_true(all(dat_all$body != ""))
     expect_true(all(dat_all$title != ""))
 
