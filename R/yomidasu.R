@@ -33,7 +33,7 @@ import_yomidasu_html <- function(file, paragraph_separator){
             warning('Failed to extract date in ', file, call. = FALSE)
         if (attrs$head[1] == "")
             warning('Failed to extract heading in ', file, call. = FALSE)
-        if (attrs$length[1] != "字" && attrs$body[1] == "")
+        if (attrs$length[1] != "\U5B57" && attrs$body[1] == "")
             warning('Failed to extract body text in ', file, call. = FALSE)
         data <- rbind(data, as.data.frame(attrs, stringsAsFactors = FALSE))
     }
@@ -52,8 +52,8 @@ extract_yomidasu_attrs <- function(node, paragraph_separator) {
 
     ps <- getNodeSet(node, '../following-sibling::div[1]//p[@class="mb10"]//text()')
     p <- sapply(ps, xmlValue)
-    attrs$body <- stri_replace_all_regex(paste0(p, collapse = ""), "\\p{P}　",
-                                         paste0("。", paragraph_separator, "　"))
+    attrs$body <- stri_replace_all_regex(paste0(p, collapse = ""), "\\p{P}\\p{Z}",
+                                         paste0("\U3002", paragraph_separator))
 
     tds <- getNodeSet(node, './/tr/th')
     attrs$date <- clean_text(xmlValue(tds[[2]]))

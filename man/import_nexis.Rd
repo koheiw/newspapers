@@ -19,7 +19,7 @@ texts.}
 \item{raw_date}{return date of publication without parsing if \code{TRUE}.}
 
 \item{variant}{specify type of Nexis database files downloaded. Files should
-be HTML (.html) for Nexis UK.}
+be HTML (.html) for Nexis UK or MS Word (.docx) for Nexis Advance.}
 }
 \description{
 This extract headings, body texts and meta data (date, byline, length,
@@ -34,5 +34,11 @@ afp <- import_nexis("tests/data/nexis/afp_2013-03-12_0501.html")
 gur <- import_nexis("tests/data/nexis/guardian_1986-01-01_0001.html")
 spg <- import_nexis("tests/data/nexis/spiegel_2012-02-01_0001.html", language_date = "german")
 all <- import_nexis("tests/data/nexis", raw_date = TRUE)
+
+# Nexis Advance
+nyt <- import_nexis("tests/data/nexis/nyt.docx", variant = "advance")
+ust <- import_nexis("tests/data/nexis/usa-today.docx", variant = "advance")
+wsp <- import_nexis("tests/data/nexis/washington-post.docx", variant = "advance")
+all <- import_nexis("tests/data/nexis/", variant = "advance")
 }
 }

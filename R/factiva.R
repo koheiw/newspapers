@@ -60,7 +60,7 @@ extract_factiva_attrs <- function(node, paragraph_separator) {
 
     divs <- getNodeSet(node, './/div[not(@*)]')
     v <- sapply(divs, function(x) clean_text(xmlValue(x)))
-    i <- head(which(stri_detect_regex(v, "^\\d+ (words|mots|Wörter|palabras|parole|語|palavras|слов|字)$")), 1)
+    i <- head(which(stri_detect_regex(v, "^\\d+ (words|mots|W\U00F6rter|palabras|parole|\U8A9E|palavras|\U0441\U043B\U043E\U0432|\U5B57)$")), 1)
 
     attrs$length <- v[i]
     attrs$date <- v[i + 1]
