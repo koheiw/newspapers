@@ -26,19 +26,3 @@ This extract headings, body texts and meta data (date, byline, length,
 secotion, edntion) from items in HTML or MS Word files downloaded from the Nexis
 database.
 }
-\examples{
-\dontrun{
-# Nexis UK
-irt <- import_nexis("tests/data/nexis/irish-times_1995-06-12_0001.html")
-afp <- import_nexis("tests/data/nexis/afp_2013-03-12_0501.html")
-gur <- import_nexis("tests/data/nexis/guardian_1986-01-01_0001.html")
-spg <- import_nexis("tests/data/nexis/spiegel_2012-02-01_0001.html", language_date = "german")
-all <- import_nexis("tests/data/nexis", raw_date = TRUE)
-
-# Nexis Advance
-nyt <- import_nexis("tests/data/nexis/nyt.docx", variant = "advance")
-ust <- import_nexis("tests/data/nexis/usa-today.docx", variant = "advance")
-wsp <- import_nexis("tests/data/nexis/washington-post.docx", variant = "advance")
-all <- import_nexis("tests/data/nexis/", variant = "advance")
-}
-}

@@ -20,12 +20,6 @@
 #' gur <- import_nexis("tests/data/nexis/guardian_1986-01-01_0001.html")
 #' spg <- import_nexis("tests/data/nexis/spiegel_2012-02-01_0001.html", language_date = "german")
 #' all <- import_nexis("tests/data/nexis", raw_date = TRUE)
-#'
-#' # Nexis Advance
-#' nyt <- import_nexis("tests/data/nexis/nyt.docx", variant = "advance")
-#' ust <- import_nexis("tests/data/nexis/usa-today.docx", variant = "advance")
-#' wsp <- import_nexis("tests/data/nexis/washington-post.docx", variant = "advance")
-#' all <- import_nexis("tests/data/nexis/", variant = "advance")
 #' }
 import_nexis <- function(path, paragraph_separator = "\n\n",
                          language_date = c('english', 'german'),
