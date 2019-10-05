@@ -12,14 +12,13 @@ import_lexis_advance_docx <- function(file, paragraph_separator) {
     #elems <- getNodeSet(dom, "//w:p[./w:bookmarkEnd]/following-sibling::w:p[1]")
     elems <- getNodeSet(dom, "//w:p[./w:bookmarkEnd and not(.//w:t) and not(.//w:r)]")
 
-
     n <- length(elems)
     data <- data.frame()
     for (i in seq(n)) {
         attrs <- list(pub = "", date = "", head = "", body = "", section = "", length = 0)
         elem <- elems[[i]]
         body <- character()
-        is_header <- FALSE
+        #is_header <- FALSE
         is_body <- FALSE
         ignore <- FALSE
         j <- 1
@@ -27,30 +26,26 @@ import_lexis_advance_docx <- function(file, paragraph_separator) {
             str <- stri_trim(xmlValue(elem))
             #cat(j, "\n")
             #print(str)
-            if (!is.na(str) && str != "") {
-                is_header <- TRUE
-            }
-            if (stri_detect_regex(str, "^Body$")) {
-                is_header <- FALSE
+            if (stri_detect_regex(str, "^Body$"))
                 is_body <- TRUE
-            }
-            if (is_header) {
-                if (j == 1) {
-                    attrs$head <- str
-                    j <- j + 1
-                } else if (j == 2) {
-                    attrs$pub <- str
-                    j <- j + 1
-                } else if (j == 3) {
-                    attrs$date <- str
-                    j <- j + 1
+            if (!is_body && !ignore) {
+                if (!is.na(str) && str != "") {
+                    if (j == 1) {
+                        attrs$head <- str
+                        j <- j + 1
+                    } else if (j == 2) {
+                        attrs$pub <- str
+                        j <- j + 1
+                    } else if (j == 3) {
+                        attrs$date <- str
+                        j <- j + 1
+                    }
                 }
                 if (stri_detect_regex(str, "^Section:\\s")) {
                     attrs$section <- stri_trim(stri_replace_first_regex(str, "^Section:\\s", ""))
                 } else if (stri_detect_regex(str, "^Length:\\s")) {
                     attrs$length <- stri_trim(stri_replace_first_regex(str, "Length:\\s(\\d+)\\swords", "$1"))
                 }
-
             }
             if (stri_detect_regex(str, "^(ABSTRACT|Classification)$")) {
                 ignore <- TRUE
