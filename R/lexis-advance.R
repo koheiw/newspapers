@@ -1,57 +1,75 @@
 
-import_lexis_advance_docx <- function(file, paragraph_separator, language_date, raw_date) {
+import_lexis_advance_docx <- function(file, paragraph_separator) {
     cat('Reading', file, '\n')
 
     unzip(file, "word/document.xml", exdir = tempdir())
     xml <- paste0(readLines(paste0(tempdir(), "/word/document.xml"),
                             warn = FALSE, encoding = "UTF-8"), collapse = "")
     dom <- xmlParse(xml, encoding = "UTF-8")
+    #elems <- getNodeSet(dom, "//w:p[.//w:outlineLvl]")
+    #elems <- getNodeSet(dom, "//w:body/w:p[./w:hyperlink]")
+    #elems <- getNodeSet(dom, "//w:p[./w:hyperlink]")
+    #elems <- getNodeSet(dom, "//w:p[./w:bookmarkEnd]/following-sibling::w:p[1]")
+    elems <- getNodeSet(dom, "//w:p[./w:bookmarkEnd and not(.//w:t) and not(.//w:r)]")
 
 
-    #elems <- getNodeSet(dom, "//w:p[./w:hyperlink/w:r/w:rPr/w:sz[@w:val='28'] and
-    #                               ./w:hyperlink/w:r/w:rPr/w:color[@w:val='0077CC']]")
-    #elems <- getNodeSet(dom, "//w:p[.//w:jc[@w:val='center'] and .//w:spacing]")
-    elems <- getNodeSet(dom, "//w:p[.//w:outlineLvl]")
     n <- length(elems)
     data <- data.frame()
     for (i in seq(n)) {
         attrs <- list(pub = "", date = "", head = "", body = "", section = "", length = 0)
         elem <- elems[[i]]
         body <- character()
+        is_header <- FALSE
         is_body <- FALSE
+        ignore <- FALSE
         j <- 1
         while (TRUE) {
-            #str <- stri_trim(xmlValue(elem))
-            # if (stri_detect_regex(str, "^\\(.{0,100}\\)$")) {
-            #     elem <- getSibling(elem, after = TRUE)
-            #     next
-            # }
             str <- stri_trim(xmlValue(elem))
-            #if (stri_detect_regex(str, "^Load-Date:\\s")) break
-            if (is_body) {
-                body <- c(body, str)
-            } else {
+            #cat(j, "\n")
+            #print(str)
+            if (!is.na(str) && str != "") {
+                is_header <- TRUE
+            }
+            if (stri_detect_regex(str, "^Body$")) {
+                is_header <- FALSE
+                is_body <- TRUE
+            }
+            if (is_header) {
                 if (j == 1) {
                     attrs$head <- str
+                    j <- j + 1
                 } else if (j == 2) {
                     attrs$pub <- str
+                    j <- j + 1
                 } else if (j == 3) {
                     attrs$date <- str
+                    j <- j + 1
                 }
-                #if (stri_detect_regex(str, "^[A-Za-z]{3,12} [0-9]{1,2}, [0-9]{4}"))
-                #    attrs$date <- stri_extract_first_regex(str, "^([A-Za-z]{3,12}) ([0-9]{1,2}), ([0-9]{4})")
                 if (stri_detect_regex(str, "^Section:\\s")) {
                     attrs$section <- stri_trim(stri_replace_first_regex(str, "^Section:\\s", ""))
                 } else if (stri_detect_regex(str, "^Length:\\s")) {
                     attrs$length <- stri_trim(stri_replace_first_regex(str, "Length:\\s(\\d+)\\swords", "$1"))
-                } else if (stri_detect_regex(str, "^Body$")) {
-                    is_body <- TRUE
+                }
+
+            }
+            if (stri_detect_regex(str, "^(ABSTRACT|Classification)$")) {
+                ignore <- TRUE
+            }
+            if (is_body && !ignore) {
+                if (!stri_detect_regex(str, "^Body$") &&
+                    !stri_detect_regex(str, "^Load-Date:\\s") &&
+                    !stri_detect_regex(str, "^Photo: \\s")) {
+                    body <- c(body, str)
                 }
             }
+            if (stri_detect_regex(str, "^(FULL TEXT)$")) {
+                ignore <- FALSE
+            }
             elem <- getSibling(elem, after = TRUE)
+            if (stri_detect_regex(str, "^End of Document$")) break
             if (is.null(elem)) break
             if (i < n && identical(elem, elems[[i + 1]])) break
-            j <- j + 1
+
         }
         body <- body[nzchar(body)]
         attrs$body <- paste(body, collapse = " ")
