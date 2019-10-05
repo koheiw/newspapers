@@ -15,7 +15,7 @@
 #' @examples
 #' \dontrun{
 #' # Lexis Advance
-#' nyt <- import_lexis("tests/data/lexis/nyt.docx")
+#' nyt <- import_lexis("tests/data/lexis/nyt1.docx")
 #' ust <- import_lexis("tests/data/lexis/usa-today.docx")
 #' wsp <- import_lexis("tests/data/lexis/washington-post.docx")
 #' all <- import_lexis("tests/data/lexis/")
@@ -33,11 +33,11 @@ import_lexis <- function(path, paragraph_separator = "\n\n",
         data <- data.frame()
         for(f in file){
             if(stri_detect_regex(f, '\\.docx$', ignore.case = TRUE)){
-                data <- rbind(data, import_lexis_advance_docx(f, paragraph_separator, language_date, raw_date))
+                data <- rbind(data, import_lexis_advance_docx(f, paragraph_separator))
             }
         }
     } else if (file.exists(path)) {
-        data <- import_lexis_advance_docx(path, paragraph_separator, language_date, raw_date)
+        data <- import_lexis_advance_docx(path, paragraph_separator)
     } else {
         stop(path, " does not exist")
     }

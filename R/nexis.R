@@ -39,7 +39,7 @@ import_nexis <- function(path, paragraph_separator = "\n\n",
                 }
             } else {
                 if(stri_detect_regex(f, '\\.docx$', ignore.case = TRUE)){
-                    data <- rbind(data, import_lexis_advance_docx(f, paragraph_separator, language_date, raw_date))
+                    data <- rbind(data, import_lexis_advance_docx(f, paragraph_separator))
                 }
             }
         }
@@ -47,7 +47,7 @@ import_nexis <- function(path, paragraph_separator = "\n\n",
         if (variant == "uk") {
             data <- import_nexis_uk_html(path, paragraph_separator, language_date, raw_date)
         } else {
-            data <- import_lexis_advance_docx(path, paragraph_separator, language_date, raw_date)
+            data <- import_lexis_advance_docx(path, paragraph_separator)
         }
     } else {
         stop(path, " does not exist")
