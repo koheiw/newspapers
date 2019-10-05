@@ -29,7 +29,7 @@ Lexis database.
 \examples{
 \dontrun{
 # Lexis Advance
-nyt <- import_lexis("tests/data/lexis/nyt.docx")
+nyt <- import_lexis("tests/data/lexis/nyt1.docx")
 ust <- import_lexis("tests/data/lexis/usa-today.docx")
 wsp <- import_lexis("tests/data/lexis/washington-post.docx")
 all <- import_lexis("tests/data/lexis/")

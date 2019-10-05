@@ -2,7 +2,7 @@ context("test import_lexis")
 
 test_that("test that import_lexis works with lexis Advance", {
 
-    dat1 <- import_lexis('../data/lexis/nyt.docx', variant = "advance")
+    dat1 <- import_lexis('../data/lexis/nyt1.docx', variant = "advance")
     expect_identical(nrow(dat1), 50L)
     expect_true(all(dat1$body != ""))
     expect_true(all(dat1$title != ""))
@@ -27,8 +27,26 @@ test_that("test that import_lexis works with lexis Advance", {
     expect_true(all(dat5$body != ""))
     expect_true(all(dat5$title != ""))
 
+    dat6 <- import_lexis('../data/lexis/guardian1.docx', variant = "advance")
+    expect_identical(nrow(dat6), 2L)
+    expect_true(all(dat6$body != ""))
+    expect_true(all(dat6$title != ""))
+    expect_false(any(stri_detect_fixed(dat6$dat6, "guardian")))
+
+    dat7 <- import_lexis('../data/lexis/guardian2.docx', variant = "advance")
+    expect_identical(nrow(dat7), 1L)
+    expect_true(all(dat7$body != ""))
+    expect_true(all(dat7$title != ""))
+    expect_false(any(stri_detect_fixed(dat7$date, "guardian")))
+
+    dat8 <- import_lexis('../data/lexis/guardian3.docx', variant = "advance")
+    expect_identical(nrow(dat8), 62L)
+    expect_true(all(dat8$body != ""))
+    expect_true(all(dat8$title != ""))
+    expect_false(any(stri_detect_fixed(dat8$date, "guardian")))
+
     dat_all <- import_lexis('../data/lexis', variant = "advance")
-    expect_identical(nrow(dat_all), 50L + 50L + 7L + 100L + 100L)
+    expect_identical(nrow(dat_all), 50L + 50L + 7L + 100L + 100L + 2L + 1L + 62L)
     expect_true(all(dat_all$body != ""))
     expect_true(all(dat_all$title != ""))
 
