@@ -24,10 +24,14 @@ import_lexis_advance_docx <- function(file, paragraph_separator) {
         j <- 1
         while (TRUE) {
             str <- stri_trim(xmlValue(elem))
+            if (stri_detect_regex(str, "^End of Document$|^Load-Date:\\s")) break
             #cat(j, "\n")
             #print(str)
-            if (stri_detect_regex(str, "^Body$"))
+            if (stri_detect_regex(str, "^Body$")) {
                 is_body <- TRUE
+                elem <- getSibling(elem, after = TRUE)
+                next
+            }
             if (!is_body && !ignore) {
                 if (!is.na(str) && str != "") {
                     if (j == 1) {
@@ -47,27 +51,22 @@ import_lexis_advance_docx <- function(file, paragraph_separator) {
                     attrs$length <- stri_trim(stri_replace_first_regex(str, "Length:\\s(\\d+)\\swords", "$1"))
                 }
             }
-            if (stri_detect_regex(str, "^(ABSTRACT|Classification)$")) {
+            if (stri_detect_regex(str, "^(ABSTRACT|Classification|Graphic)$")) {
                 ignore <- TRUE
             }
             if (is_body && !ignore) {
-                if (!stri_detect_regex(str, "^Body$") &&
-                    !stri_detect_regex(str, "^Load-Date:\\s") &&
-                    !stri_detect_regex(str, "^Photo: \\s")) {
-                    body <- c(body, str)
-                }
+                body <- c(body, str)
             }
             if (stri_detect_regex(str, "^(FULL TEXT)$")) {
                 ignore <- FALSE
             }
             elem <- getSibling(elem, after = TRUE)
-            if (stri_detect_regex(str, "^End of Document$")) break
             if (is.null(elem)) break
             if (i < n && identical(elem, elems[[i + 1]])) break
 
         }
         body <- body[nzchar(body)]
-        attrs$body <- paste(body, collapse = " ")
+        attrs$body <- paste(body, collapse = "\\n ")
         if (attrs$pub[1] == '' || is.na(attrs$pub[1]))
             warning('Failed to extract publication name in ', file, call. = FALSE)
         if (attrs$date[1] == '' || is.na(attrs$date[1]))

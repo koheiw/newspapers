@@ -4,9 +4,13 @@
 \alias{import_lexis}
 \title{Extract texts and meta data from Lexis files}
 \usage{
-import_lexis(path, paragraph_separator = "\\n\\n",
-  language_date = c("english", "german"), raw_date = FALSE,
-  variant = c("advance"))
+import_lexis(
+  path,
+  paragraph_separator = "\\n\\n",
+  language_date = c("english", "german"),
+  raw_date = FALSE,
+  variant = c("advance")
+)
 }
 \arguments{
 \item{path}{either path to a file or a directory that containe files}
