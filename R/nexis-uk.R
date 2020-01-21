@@ -69,9 +69,9 @@ extract_nexis_uk_attrs <- function(node, paragraph_separator, language_date, raw
                 if (all(!is.na(m[1,2:4]))) {
                     date <- paste0(m[1,2:4], collapse = ' ')
                     if (language_date == 'german') {
-                        datetime <- stri_datetime_parse(date, 'd MMMM Y', locale = 'de_DE')
+                        datetime <- stri_datetime_parse(date, 'd MMMM y', locale = 'de_DE')
                     } else {
-                        datetime <- stri_datetime_parse(date, 'MMMM d Y', locale = 'en_EN')
+                        datetime <- stri_datetime_parse(date, 'MMMM d y', locale = 'en_EN')
                     }
                     attrs$date <- stri_datetime_format(datetime, 'yyyy-MM-dd')
                 }
