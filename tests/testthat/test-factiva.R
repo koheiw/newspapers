@@ -34,13 +34,14 @@ test_that("test that import_factiva works with different language editions", {
     expect_identical(nrow(dat1), 100L)
     expect_true(all(dat1$body != ""))
     expect_true(all(dat1$head != ""))
-    expect_true(all(!is.na(dat1$date)))
+    expect_true(all(!is.na(as.Date(stri_datetime_parse(dat1$date, 'd MMMM y', locale = 'de_DE')))))
 
     dat2 <- import_factiva("../data/factiva/chinese-ui.html")
     expect_identical(nrow(dat2), 97L)
     expect_true(all(dat2$body != ""))
     expect_true(all(dat2$head != ""))
     expect_true(all(!is.na(dat2$date)))
+    expect_true(all(!is.na(as.Date(stri_datetime_parse(dat2$date, 'y 年 M 月 d 日')))))
 
 })
 
