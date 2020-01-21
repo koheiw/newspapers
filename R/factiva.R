@@ -43,7 +43,6 @@ import_factiva_html <- function(file, paragraph_separator){
         data <- rbind(data, as.data.frame(attrs, stringsAsFactors = FALSE))
     }
 
-    data$date <- as.Date(stri_datetime_parse(data$date, 'dd MMMM yyyy'))
     data$length <- as.numeric(stri_replace_all_regex(data$length, "[^0-9]", ""))
     data$file <- basename(file)
 
@@ -61,11 +60,7 @@ extract_factiva_attrs <- function(node, paragraph_separator) {
 
     divs <- getNodeSet(node, './/div[not(@*)]')
     v <- sapply(divs, function(x) clean_text(xmlValue(x)))
-    if (stri_detect_regex(v[1], "^\\d+ \\w+")) {
-        i <- 1
-    } else {
-        i <- 2
-    }
+    i <- min(which(stri_detect_regex(v, "^\\d+")))
     attrs$length <- v[i]
     attrs$date <- v[i + 1]
     attrs$source <- v[i + 2]
