@@ -4,13 +4,7 @@
 \alias{import_lexis}
 \title{Extract texts and meta data from Lexis files}
 \usage{
-import_lexis(
-  path,
-  paragraph_separator = "\\n\\n",
-  language_date = c("english", "german"),
-  raw_date = FALSE,
-  variant = c("advance")
-)
+import_lexis(path, paragraph_separator = "\\n\\n", variant = c("advance"))
 }
 \arguments{
 \item{path}{either path to a file or a directory that containe files}
@@ -18,11 +12,7 @@ import_lexis(
 \item{paragraph_separator}{a character to sperarate paragrahphs in body
 texts.}
 
-\item{language_date}{a character to specify langauge-dependent date format.}
-
-\item{raw_date}{return date of publication without parsing if \code{TRUE}.}
-
-\item{variant}{specify type of Lexis database files downloaded. Files should
+\item{variant}{specify type of Lexis database files downloaded. Files should be
 MS Word (.docx) for Lexis Advance.}
 }
 \description{

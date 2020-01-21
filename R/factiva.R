@@ -29,6 +29,7 @@ import_factiva_html <- function(file, paragraph_separator){
 
     #Load as DOM object
     dom <- htmlParse(html, encoding = "UTF-8")
+
     data <- data.frame()
     for (node in getNodeSet(dom, '//div[contains(@class, "Article")]')) {
         node <- xmlParent(node)
@@ -42,7 +43,6 @@ import_factiva_html <- function(file, paragraph_separator){
         data <- rbind(data, as.data.frame(attrs, stringsAsFactors = FALSE))
     }
 
-    data$date <- as.Date(stri_datetime_parse(data$date, 'dd MMMM yyyy'))
     data$length <- as.numeric(stri_replace_all_regex(data$length, "[^0-9]", ""))
     data$file <- basename(file)
 
@@ -51,7 +51,7 @@ import_factiva_html <- function(file, paragraph_separator){
 
 extract_factiva_attrs <- function(node, paragraph_separator) {
 
-    attrs <- list(date = "", length = "", section = "", head = "", body = "")
+    attrs <- list(date = "", length = "", section = "", head = "", body = "", source = "")
 
     ps <- getNodeSet(node, './/p[contains(@class, "articleParagraph")]//text()')
     p <- sapply(ps, xmlValue)
@@ -60,8 +60,7 @@ extract_factiva_attrs <- function(node, paragraph_separator) {
 
     divs <- getNodeSet(node, './/div[not(@*)]')
     v <- sapply(divs, function(x) clean_text(xmlValue(x)))
-    i <- head(which(stri_detect_regex(v, "^\\d+ (words|mots|W\U00F6rter|palabras|parole|\U8A9E|palavras|\U0441\U043B\U043E\U0432|\U5B57)$")), 1)
-
+    i <- min(which(stri_detect_regex(v, "^\\d+")))
     attrs$length <- v[i]
     attrs$date <- v[i + 1]
     attrs$source <- v[i + 2]
