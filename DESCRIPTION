@@ -1,7 +1,7 @@
 Package: newspapers
 Type: Package
 Title: Import files downloaded from newspaper databases
-Version: 0.4.0
+Version: 0.4.1
 Author: Kohei Watanabe
 Maintainer: Kohei Watanabe <watanabe.kohei@gmail.com>
 Description: Import files downloaded from newspaper databases for quantitative text analysis.
@@ -16,4 +16,4 @@ Depends:
     stringi,
     XML,
     readxl
-RoxygenNote: 7.0.2
+RoxygenNote: 7.1.1

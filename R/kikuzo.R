@@ -23,6 +23,10 @@ import_kikuzo_html <- function(file, paragraph_separator){
 
     line <- readLines(file, warn = FALSE, encoding = "UTF-8")
     html <- paste0(line, collapse = "\n")
+    html <- stri_replace_all_regex(
+        html, '<span style="font-weight: bold;background:#88FFCC;color:black">(.*?)</span>', "$1",
+        case_insensitive = TRUE
+    )
 
     #Load as DOM object
     dom <- htmlParse(html, encoding = "UTF-8")
