@@ -30,5 +30,11 @@ test_that("test that import_kikuzo works with HTML downloaded manually", {
 test_that("test that highlighted words are preserved without space around", {
     dat <- import_kikuzo("../data/kikuzo/kikuzo_raw.html")
     expect_true(all(stringi::stri_detect_fixed(dat$body, "一帯一路")))
-    expect_false(any(stringi::stri_detect_regex(dat$body, "\\s一帯一路\\s")))
 })
+
+test_that("test that tags around highlighted words are removed", {
+    dat <- import_kikuzo("../data/kikuzo/kikuzo_2009-03-01_001.html")
+    expect_true(all(stringi::stri_detect_regex(dat$body, "北朝鮮|イラン")))
+    expect_false(any(stringi::stri_detect_regex(dat$body, "\\s北朝鮮|イラン\\s")))
+})
+
