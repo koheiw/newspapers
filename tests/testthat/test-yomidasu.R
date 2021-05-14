@@ -24,7 +24,7 @@ test_that("test that import_yomidasu works with HTML downloaded by a scraper", {
     dat_all <- import_yomidasu('../data/yomidasu')
     expect_identical(nrow(dat_all), 78L + 27L + 40L)
     expect_true(sum(dat_all$body != "") == 70L + 27L + 40L)
-    expect_true(sum(dat_all$head != "") == 70L + 27L + 40L)
+    expect_true(sum(dat_all$head != "") == 78L + 27L + 40L)
 
 })
 

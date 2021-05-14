@@ -1,4 +1,4 @@
-import_nexis_uk_html <- function(file, paragraph_separator, language_date, raw_date){
+import_nexis_uk_html <- function(file, paragraph_separator){
 
     #Convert format
     cat('Reading', file, '\n')
@@ -10,7 +10,7 @@ import_nexis_uk_html <- function(file, paragraph_separator, language_date, raw_d
     dom <- htmlParse(html, encoding = "UTF-8")
     data <- data.frame()
     for(doc in getNodeSet(dom, '//doc')){
-        attrs <- extract_nexis_uk_attrs(doc, paragraph_separator, language_date, raw_date)
+        attrs <- extract_nexis_uk_attrs(doc, paragraph_separator)
         if (attrs$pub[1] == '' || is.na(attrs$pub[1]))
             warning('Failed to extract publication name in ', file, call. = FALSE)
         if (attrs$date[1] == '' || is.na(attrs$date[1]))
@@ -28,23 +28,9 @@ import_nexis_uk_html <- function(file, paragraph_separator, language_date, raw_d
 }
 
 
-extract_nexis_uk_attrs <- function(node, paragraph_separator, language_date, raw_date) {
+extract_nexis_uk_attrs <- function(node, paragraph_separator) {
 
     attrs <- list(pub = '', edition = '', date = '', byline = '', length = '', section = '', head = '', body = '')
-
-    if (language_date == 'german') {
-        regex <- paste0(c('([0-9]{1,2})',
-                          '[. ]+(Januar|Februar|M\u00e4rz|Maerz|April|Mai|Juni|Juli|August|September|Oktober|November|Dezember)',
-                          '[ ]+([0-9]{4})',
-                          '([ ]+(Montag|Dienstag|Mittwoch|Donnerstag|Freitag|Samstag|Sonntag))?',
-                          '([, ]+(.+))?'), collapse = '')
-    } else {
-        regex <- paste0(c('(January|February|March|April|May|June|July|August|September|October|November|December)',
-                          '[, ]+([0-9]{1,2})',
-                          '[, ]+([0-9]{4})',
-                          '([,; ]+(Monday|Tuesday|Wednesday|Thursday|Friday|Saturday|Sunday))?',
-                          '([, ]+(.+))?'), collapse = '')
-    }
 
     n_max <- 0;
     i <- 1
@@ -62,23 +48,7 @@ extract_nexis_uk_attrs <- function(node, paragraph_separator, language_date, raw
         if (i == 2) {
             attrs$pub <- stri_trim(str)
         } else if (i == 3) {
-            if (raw_date) {
-                attrs$date <- stri_trim(str)
-            } else {
-                m <- stri_match_first_regex(str, regex)
-                if (all(!is.na(m[1,2:4]))) {
-                    date <- paste0(m[1,2:4], collapse = ' ')
-                    if (language_date == 'german') {
-                        datetime <- stri_datetime_parse(date, 'd MMMM y', locale = 'de_DE')
-                    } else {
-                        datetime <- stri_datetime_parse(date, 'MMMM d y', locale = 'en_EN')
-                    }
-                    attrs$date <- stri_datetime_format(datetime, 'yyyy-MM-dd')
-                }
-                if (!is.na(m[1,8])) {
-                    attrs$edition <- stri_trim(m[1,8])
-                }
-            }
+            attrs$date <- stri_trim(str)
         } else if (i == 4) {
             attrs$head <- stri_trim(str)
         } else if (i >= 5) {

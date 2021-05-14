@@ -5,8 +5,8 @@ import_html <- function(path, paragraph_separator = "\n\n", source){
     if (dir.exists(path)) {
         dir <- path
         file <- list.files(dir, full.names = TRUE, recursive = TRUE)
-        for(f in file){
-            if(stri_detect_regex(f, '\\.html$|\\.htm$|\\.xhtml$', ignore.case = TRUE) && file.size(f)) {
+        for (f in file) {
+            if (stri_detect_regex(f, '\\.html$|\\.htm$|\\.xhtml$', case_insensitive = TRUE) && file.size(f)) {
                 tryCatch({
                     if (source == "kikuzo") {
                         result <- rbind(result, import_kikuzo_html(f, paragraph_separator))
@@ -36,12 +36,13 @@ import_html <- function(path, paragraph_separator = "\n\n", source){
 }
 
 #' @import stringi
-clean_text <- function(str) {
-    str <- stri_replace_all_regex(str, '[[:^print:]]', ' ');
-    str <- stri_replace_all_regex(str, "[\\r\\n\\t]", ' ')
-    str <- stri_replace_all_regex(str, "\\s\\s+", ' ')
-    str <- stri_trim(str);
-    return(str)
+clean_text <- function(txt) {
+    txt[is.na(txt)] <- ""
+    txt <- stri_replace_all_regex(txt, '[[:^print:]]', ' ');
+    txt <- stri_replace_all_regex(txt, "[\\r\\n\\t]", ' ')
+    txt <- stri_replace_all_regex(txt, "\\s\\s+", ' ')
+    txt <- stri_trim(txt);
+    return(txt)
 }
 
 is_number <- function(x) {

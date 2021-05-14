@@ -1,18 +1,11 @@
-#' Extract texts and meta data from Integrum XLSX files
-#'
-#' This extract headings, body texts and meta data (date, time) from XLSX files
-#' downloaded from the Integrum database.
-#' @param path either path to a XLSX file or a directory that containe XLSX
-#'   files
-#' @param paragraph_separator a character to sperarate paragrahphs in body
-#'   texts.
+#' @rdname import
 #' @import utils XML readxl
 #' @export
 #' @examples
 #' \dontrun{
-#' one <- import_integrum("tests/data/integrum/channel1_20050201-20050228_0001-0059_0059.xlsx")
-#' two <- import_integrum("tests/data/integrum/ntv_20121201-20121231_0001-0100_0190.xlsx")
-#' all <- import_integrum("tests/data/integrum")
+#' # Integrum
+#' xlsx <- import_integrum("tests/data/integrum/channel1_20050201-20050228_0001-0059_0059.xlsx")
+#' html <- import_integrum("tests/data/integrum/moscow_1993-06-06_1994-09-02.html")
 #' }
 import_integrum <- function(path, paragraph_separator = "\n\n") {
     result <- data.frame()
@@ -21,17 +14,21 @@ import_integrum <- function(path, paragraph_separator = "\n\n") {
         file <- list.files(dir, full.names = TRUE, recursive = TRUE)
         size_prev <- 0
         for (f in file) {
-            if (stri_detect_regex(f, '\\.doc$', ignore.case = TRUE) && file.size(f)) {
-                result <- rbind(result, import_doc(f, paragraph_separator))
-            } else if (stri_detect_regex(f, '\\.xlsx$', ignore.case = TRUE) && file.size(f)) {
-                result <- rbind(result, import_xlsx(f, paragraph_separator))
+            if (stri_detect_regex(f, '\\.doc$', case_insensitive = TRUE) && file.size(f)) {
+                result <- rbind(result, import_integrum_doc(f, paragraph_separator))
+            } else if (stri_detect_regex(f, '\\.xlsx$', case_insensitive = TRUE) && file.size(f)) {
+                result <- rbind(result, import_integrum_xlsx(f, paragraph_separator))
+            } else if (stri_detect_regex(f, '\\.html$|\\.htm$|\\.xhtml$', case_insensitive = TRUE)) {
+                result <- rbind(result, import_integrum_html(f, paragraph_separator))
             }
         }
     } else if (file.exists(path) && file.size(path)) {
-        if (stri_detect_regex(path, '\\.doc$', ignore.case = TRUE)) {
-            result <- import_doc(path, paragraph_separator)
-        } else if(stri_detect_regex(path, '\\.xlsx$', ignore.case = TRUE)) {
-            result <- import_xlsx(path, paragraph_separator)
+        if (stri_detect_regex(path, '\\.doc$', case_insensitive = TRUE)) {
+            result <- import_integrum_doc(path, paragraph_separator)
+        } else if (stri_detect_regex(path, '\\.xlsx$', case_insensitive = TRUE)) {
+            result <- import_integrum_xlsx(path, paragraph_separator)
+        } else if (stri_detect_regex(path, '\\.html$|\\.htm$|\\.xhtml$', case_insensitive = TRUE)) {
+            result <- import_integrum_html(path, paragraph_separator)
         }
     } else {
         stop(path, " does not exist")
@@ -39,7 +36,7 @@ import_integrum <- function(path, paragraph_separator = "\n\n") {
     return(result)
 }
 
-import_xlsx <- function(file, paragraph_separator) {
+import_integrum_xlsx <- function(file, paragraph_separator) {
     cat('Reading', file, '\n')
     result <- readxl::read_excel(file)
     result <- result[,seq(5)]
@@ -58,7 +55,7 @@ fix_date <- function(x) {
 }
 
 #' @import XML
-import_doc <- function(file, paragraph_separator) {
+import_integrum_doc <- function(file, paragraph_separator) {
 
     cat('Reading', file, '\n')
 
@@ -110,4 +107,58 @@ import_doc <- function(file, paragraph_separator) {
     return(result)
 }
 
+#' @noRd
+#' @examples
+#' \dontrun{
+#' out <- newspapers:::import_integrum_html("tests/data/integrum/moscow_1993-06-06_1994-09-02.html", "\n\n")
+#' }
 
+import_integrum_html <- function(file, paragraph_separator) {
+
+    #Convert format
+    cat("Reading", file, "\n")
+
+    line <- readLines(file, warn = FALSE, encoding = "windows-1251")
+    html <- paste0(line, collapse = "\n")
+
+    #Load as DOM object
+    dom <- htmlParse(html, encoding = "windows-1251")
+    data <- data.frame()
+    for (node in getNodeSet(dom, '//body/div')) {
+        attrs <- extract_integrum_attrs(node, paragraph_separator)
+        if (attrs$date[1] == "")
+            warning('Failed to extract date in ', file, call. = FALSE)
+        if (attrs$head[1] == "")
+            warning('Failed to extract heading in ', file, call. = FALSE)
+        if (attrs$body[1] == "")
+            warning('Failed to extract body text in ', file, call. = FALSE)
+        data <- rbind(data, as.data.frame(attrs, stringsAsFactors = FALSE))
+    }
+
+    data$date <- stri_replace_first_regex(data$date, "(\\d+)\\.(\\d+)\\.(\\d+)", "$3-$2-$1")
+    data$page <- as.numeric(stri_replace_all_regex(data$page, "[^0-9]", ""))
+    data$file <- basename(file)
+
+    return(data)
+}
+
+extract_integrum_attrs <- function(node, paragraph_separator) {
+
+    attrs <- list(pub = "", date = "", byline = "", head = "", body = "", section = "")
+
+    ps <- getNodeSet(node, './pre')
+    p <- sapply(ps[1], xmlValue)
+    attrs$body <- stri_replace_all_regex(paste0(p, collapse = ""), "\\n\\p{Z}+", "\U2029")
+    attrs$body <- stri_replace_all_fixed(attrs$body, "\n", " ")
+    attrs$body <- stri_replace_all_fixed(attrs$body, "\U2029", paragraph_separator)
+
+    tds <- getNodeSet(node, './table/tr/td')
+    v <- paste0(sapply(tds[1], xmlValue), "\n")
+    attrs$pub <- clean_text(stri_match_first_regex(v, "\\^\U0418\U0421:\\n(.*)\\n")[1,2])
+    attrs$date <- clean_text(stri_match_first_regex(v, "\\^\U0414\U0422:\\n(.*)\\n")[1,2])
+    attrs$head <- clean_text(stri_match_first_regex(v, "\\^\U0417\U0413:\\n(.*)\\n")[1,2])
+    attrs$byline <- clean_text(stri_match_first_regex(v, "\\^\U0410\U0412:\\n(.*)\\n")[1,2])
+    attrs$page <- clean_text(stri_match_first_regex(v, "\\^\U041d\U0420:\\n(.*)\\n")[1,2])
+    attrs$section <- clean_text(stri_match_first_regex(v, "\\^\U0420\U0411:\\n(.*)\\n")[1,2])
+    return(attrs)
+}
