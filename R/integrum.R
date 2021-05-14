@@ -154,11 +154,11 @@ extract_integrum_attrs <- function(node, paragraph_separator) {
 
     tds <- getNodeSet(node, './table/tr/td')
     v <- paste0(sapply(tds[1], xmlValue), "\n")
-    attrs$pub <- clean_text(stri_match_first_regex(v, "\\^ИС:\\n(.*)\\n")[1,2])
-    attrs$date <- clean_text(stri_match_first_regex(v, "\\^ДТ:\\n(.*)\\n")[1,2])
-    attrs$head <- clean_text(stri_match_first_regex(v, "\\^ЗГ:\\n(.*)\\n")[1,2])
-    attrs$byline <- clean_text(stri_match_first_regex(v, "\\^АВ:\\n(.*)\\n")[1,2])
-    attrs$page <- clean_text(stri_match_first_regex(v, "\\^НР:\\n(.*)\\n")[1,2])
-    attrs$section <- clean_text(stri_match_first_regex(v, "\\^РБ:\\n(.*)\\n")[1,2])
+    attrs$pub <- clean_text(stri_match_first_regex(v, "\\^\U0418\U0421:\\n(.*)\\n")[1,2])
+    attrs$date <- clean_text(stri_match_first_regex(v, "\\^\U0414\U0422:\\n(.*)\\n")[1,2])
+    attrs$head <- clean_text(stri_match_first_regex(v, "\\^\U0417\U0413:\\n(.*)\\n")[1,2])
+    attrs$byline <- clean_text(stri_match_first_regex(v, "\\^\U0410\U0412:\\n(.*)\\n")[1,2])
+    attrs$page <- clean_text(stri_match_first_regex(v, "\\^\U041d\U0420:\\n(.*)\\n")[1,2])
+    attrs$section <- clean_text(stri_match_first_regex(v, "\\^\U0420\U0411:\\n(.*)\\n")[1,2])
     return(attrs)
 }
