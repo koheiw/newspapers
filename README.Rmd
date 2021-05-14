@@ -15,7 +15,7 @@ knitr::opts_chunk$set(
 
 # newspapers
 
-Import files downloaded from newspaper databases
+Import files downloaded from various newspaper databases
 
 ## Supported databases and formats
 
@@ -26,7 +26,7 @@ Yomiuri Shimbun Yomidasu | .html | `import_yomidasu()`
 Dow Jones Faciva | .html | `import_factiva()`
 Nexis UK | .html | `import_nexis()`
 Lexis Advance | .docx | `import_lexis()`
-Integrum | .xlsx | `import_integrum()`
+Integrum | .doc .xlsx .html | `import_integrum()`
 
 ## Install the package
 
@@ -35,17 +35,33 @@ install.packages("devtools")
 devtools::install_github("koheiw/newspapers")
 ```
 
-## Import files
+## Load files
 
 ```{r}
 require(newspapers, quietly = TRUE)
 dat <- import_nexis("tests/data/nexis/guardian_1986-01-01_0001.html")
-dat$date <- as.Date(dat$date)
 ```
 
 ```{r, asis=TRUE, echo=FALSE}
 knitr::kable(head(dat[c("pub", "edition", "date", "byline", "length", "section", "head")]))
 ```
+
+## Parse date
+
+The functions return datelines as character, so users should parse them using `stri_datetime_parse()` with appropriate locale and time-zone settings.
+
+```{r}
+require(stringi)
+dat_en <- import_nexis("tests/data/nexis/guardian_1986-01-01_0001.html")
+dat_en$date2 <- as.Date(stri_datetime_parse(dat_en$date, "MM, dd, uuuu", tz = "GMT"))
+head(dat_en[c("date", "date2")])
+
+dat_de <- import_nexis('tests/data/nexis/spiegel_2012-02-01_0001.html')
+dat_de$date2 <- as.Date(stri_datetime_parse(dat_de$date, "dd. MM uuuu", tz = "CET", 
+                                            locale = "de_DE"))
+head(dat_de[c("date", "date2")])
+```
+
 
 ## Download files
 
