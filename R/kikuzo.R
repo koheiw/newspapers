@@ -1,16 +1,10 @@
-#' Extract texts and meta data from Kikuzo HTML files
-#'
-#' This extract headings, body texts and meta data (date, byline, length,
-#' secotion, edntion) from HTML files downloaded from the Kikuzo database.
-#' @param path either path to a HTML file or a directory that containe HTML files
-#' @param paragraph_separator a character to sperarate paragrahphs in body texts.
+#' @rdname import
 #' @import utils XML
 #' @export
 #' @examples
 #' \dontrun{
-#' one <- import_kikuzo("tests/data/kikuzo/kikuzo_1985-01-01_001.html")
-#' two <- import_kikuzo("tests/data/kikuzo/kikuzo_1985-01-01_002.html")
-#' all <- import_kikuzo("tests/data/kikuzo")
+#' # Kikuzo
+#' kik <- import_kikuzo("tests/data/kikuzo/kikuzo_1985-01-01_001.html")
 #' }
 import_kikuzo <- function(path, paragraph_separator = "\n\n") {
     import_html(path, paragraph_separator, "kikuzo")

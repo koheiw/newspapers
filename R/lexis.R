@@ -1,13 +1,4 @@
-#' Extract texts and meta data from Lexis files
-#'
-#' This extract headings, body texts and meta data (date, byline, length,
-#' secotion, edntion) from items in HTML or MS Word files downloaded from the
-#' Lexis database.
-#' @param path either path to a file or a directory that containe files
-#' @param paragraph_separator a character to sperarate paragrahphs in body
-#'   texts.
-#' @param variant specify type of Lexis database files downloaded. Files should be
-#' MS Word (.docx) for Lexis Advance.
+#' @rdname import
 #' @import utils XML
 #' @export
 #' @examples
@@ -18,16 +9,14 @@
 #' wsp <- import_lexis("tests/data/lexis/washington-post.docx")
 #' all <- import_lexis("tests/data/lexis/")
 #' }
-import_lexis <- function(path, paragraph_separator = "\n\n", variant = c("advance")){
-
-    variant <- match.arg(variant)
+import_lexis <- function(path, paragraph_separator = "\n\n"){
 
     if (dir.exists(path)) {
         dir <- path
         file <- list.files(dir, full.names = TRUE, recursive = TRUE)
         data <- data.frame()
         for(f in file){
-            if(stri_detect_regex(f, '\\.docx$', ignore.case = TRUE)){
+            if (stri_detect_regex(f, '\\.docx$', case_insensitive = TRUE)){
                 data <- rbind(data, import_lexis_advance_docx(f, paragraph_separator))
             }
         }

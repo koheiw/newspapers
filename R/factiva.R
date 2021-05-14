@@ -1,15 +1,11 @@
-#' Extract texts and meta data from factiva HTML files
-#'
-#' This extract headings, body texts and meta data (date, byline, length,
-#' secotion, edntion) from HTML files downloaded from the Factiva database.
-#' @param path either path to a HTML file or a directory that containe HTML files
-#' @param paragraph_separator a character to sperarate paragrahphs in body texts.
+#' @rdname import
 #' @import utils XML
 #' @export
 #' @examples
 #' \dontrun{
-#' one <- import_factiva("testthat/data/factiva/irish-independence_1_2017-11-14.html")
-#' two <- import_factiva("testthat/data/factiva/chosun_ilbo_1_2018-05-28.html")
+#' # Factiva
+#' iri <- import_factiva("testthat/data/factiva/irish-independence_1_2017-11-14.html")
+#' chi <- import_factiva("testthat/data/factiva/chosun_ilbo_1_2018-05-28.html")
 #' all <- import_factiva("testthat/data/factiva")
 #' }
 #'
