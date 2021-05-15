@@ -3,6 +3,7 @@
 #' @export
 #' @examples
 #' \dontrun{
+#' # Yomidasu
 #' yom <- import_yomidasu("tests/data/yomidasu/yomidasu_1987-01-01_001.html")
 #' }
 import_yomidasu <- function(path, paragraph_separator = "\n\n") {

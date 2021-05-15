@@ -31,7 +31,7 @@ texts.}
 }
 \description{
 These functions extract headings, body texts and meta data (date, byline, length,
-section, edition etc) from files downloaded from various newspaper databases.
+section, edition etc.) from files downloaded from various newspaper databases.
 }
 \examples{
 \dontrun{
@@ -66,6 +66,7 @@ gur <- import_nexis("tests/data/nexis/guardian_1986-01-01_0001.html")
 spg <- import_nexis("tests/data/nexis/spiegel_2012-02-01_0001.html")
 }
 \dontrun{
+# Yomidasu
 yom <- import_yomidasu("tests/data/yomidasu/yomidasu_1987-01-01_001.html")
 }
 }
